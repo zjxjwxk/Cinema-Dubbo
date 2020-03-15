@@ -1,7 +1,0 @@
-2020-03-13 00:16:54.850  INFO 9816 --- [Thread-18] ConfigServletWebServerApplicationContext : Closing org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@1f2586d6: startup date [Thu Mar 12 23:46:35 CST 2020]; root of context hierarchy
-2020-03-13 00:16:54.854  INFO 9816 --- [ZkClient-EventThread-48-localhost:2181] org.I0Itec.zkclient.ZkEventThread        : Terminate ZkClient event thread.
-2020-03-13 00:16:54.906  INFO 9816 --- [DubboShutdownHook] org.apache.zookeeper.ZooKeeper           : Session: 0x1000233433e0004 closed
-2020-03-13 00:16:54.907  INFO 9816 --- [DubboZkclientConnector-EventThread] org.apache.zookeeper.ClientCnxn          : EventThread shut down for session: 0x1000233433e0004
-2020-03-13 00:16:54.950  INFO 9816 --- [Thread-18] o.s.j.e.a.AnnotationMBeanExporter        : Unregistering JMX-exposed beans on shutdown
-2020-03-13 00:16:54.952  INFO 9816 --- [Thread-18] o.s.j.e.a.AnnotationMBeanExporter        : Unregistering JMX-exposed beans
-2020-03-13 00:16:54.964  INFO 9816 --- [Thread-18] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} closed
