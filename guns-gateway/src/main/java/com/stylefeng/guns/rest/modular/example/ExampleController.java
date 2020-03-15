@@ -1,9 +1,8 @@
 package com.stylefeng.guns.rest.modular.example;
 
-import com.stylefeng.guns.rest.common.SimpleObject;
+import com.stylefeng.guns.rest.common.CurrentUser;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -17,8 +16,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ExampleController {
 
     @RequestMapping("")
-    public ResponseEntity hello(@RequestBody SimpleObject simpleObject) {
-        System.out.println(simpleObject.getUser());
+    public ResponseEntity hello() {
+
+        System.out.println(CurrentUser.getCurrentUser());
+
+        // 这里将以userId为key，userInfo为value存在redis中，TTL为30分钟
+        // 或以userId为条件去数据库取出（和redis只有快慢的区别）
+
         return ResponseEntity.ok("请求成功!");
     }
 }
