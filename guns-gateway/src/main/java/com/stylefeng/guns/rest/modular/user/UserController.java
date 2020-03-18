@@ -2,12 +2,17 @@ package com.stylefeng.guns.rest.modular.user;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.stylefeng.guns.api.user.UserAPI;
+import com.stylefeng.guns.api.user.UserInfoModel;
 import com.stylefeng.guns.api.user.UserModel;
+import com.stylefeng.guns.rest.common.CurrentUser;
 import com.stylefeng.guns.rest.modular.vo.ResponseVO;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * @author zjxjwxk
+ */
 @RequestMapping("/user/")
 @RestController
 public class UserController {
@@ -15,7 +20,7 @@ public class UserController {
     @Reference(interfaceClass = UserAPI.class)
     private UserAPI userAPI;
 
-    @RequestMapping(name = "register", method = RequestMethod.POST)
+    @RequestMapping(value = "register", method = RequestMethod.POST)
     public ResponseVO register(UserModel userModel) {
 
         if (userModel.getUsername() == null || userModel.getUsername().trim().length() == 0) {
@@ -32,7 +37,7 @@ public class UserController {
         }
     }
 
-    @RequestMapping(name = "check", method = RequestMethod.POST)
+    @RequestMapping(value = "check", method = RequestMethod.POST)
     public ResponseVO check(String username) {
         if (username != null && username.trim().length() > 0) {
             // 当返回 true 的时候，表示用户名可用
@@ -47,7 +52,7 @@ public class UserController {
         }
     }
 
-    @RequestMapping(name = "logout", method = RequestMethod.GET)
+    @RequestMapping(value = "logout", method = RequestMethod.GET)
     public ResponseVO logout() {
         /*
             应用：1. 前端存储【七天】：JWT的刷新
@@ -58,5 +63,44 @@ public class UserController {
             现状：1. 前端删除JWT
          */
         return ResponseVO.success("退出成功");
+    }
+
+    @RequestMapping(value = "getUserInfo", method = RequestMethod.GET)
+    public ResponseVO getUserInfo() {
+        // 获取当前用户
+        String userId = CurrentUser.getCurrentUser();
+        if (userId != null && userId.trim().length() > 0) {
+            // 将用户ID传入后端进行查询
+            int uuid = Integer.parseInt(userId);
+            UserInfoModel userInfoModel = userAPI.getUserInfo(uuid);
+            if (userInfoModel != null) {
+                return ResponseVO.success(userInfoModel);
+            } else {
+                return ResponseVO.appFail("用户信息查询失败");
+            }
+        } else {
+            return ResponseVO.serviceFail("用户未登录");
+        }
+    }
+
+    @RequestMapping(value = "updateUserInfo", method = RequestMethod.POST)
+    public ResponseVO updateUserInfo(UserInfoModel userInfoModel) {
+        // 获取当前用户
+        String userId = CurrentUser.getCurrentUser();
+        if (userId != null && userId.trim().length() > 0) {
+            int uuid = Integer.parseInt(userId);
+            // 判断当前登录用户的ID与要修改的用户ID是否一致
+            if (uuid != userInfoModel.getUuid()) {
+                return ResponseVO.serviceFail("请修改您个人的信息");
+            }
+            UserInfoModel userInfo = userAPI.updateUserInfo(userInfoModel);
+            if (userInfo != null) {
+                return ResponseVO.success(userInfo);
+            } else {
+                return ResponseVO.appFail("用户信息修改失败");
+            }
+        } else {
+            return ResponseVO.serviceFail("用户未登录");
+        }
     }
 }
