@@ -11,8 +11,6 @@ import com.stylefeng.guns.rest.common.persistence.model.UserT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-
 @Component
 @Service(interfaceClass = UserAPI.class)
 public class UserServiceImpl implements UserAPI {
@@ -88,8 +86,6 @@ public class UserServiceImpl implements UserAPI {
         userT.setHeadUrl(userInfoModel.getHeadAddress());
         userT.setBiography(userInfoModel.getBiography());
         userT.setLifeState(Integer.parseInt(userInfoModel.getLifeState()));
-        userT.setBeginTime(time2Date(userInfoModel.getBeginTime()));
-        userT.setUpdateTime(time2Date(userInfoModel.getUpdateTime()));
 
         // 将数据存入数据库
         Integer isSuccess = userTMapper.updateById(userT);
@@ -105,6 +101,7 @@ public class UserServiceImpl implements UserAPI {
 
         UserInfoModel userInfoModel = new UserInfoModel();
 
+        userInfoModel.setUuid(userT.getUuid());
         userInfoModel.setUsername(userT.getUserName());
         userInfoModel.setNickname(userT.getNickName());
         userInfoModel.setEmail(userT.getEmail());
@@ -120,9 +117,4 @@ public class UserServiceImpl implements UserAPI {
 
         return userInfoModel;
     }
-
-    private Date time2Date(long time) {
-        return new Date(time);
-    }
-
 }
