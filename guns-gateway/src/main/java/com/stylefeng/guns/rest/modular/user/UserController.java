@@ -1,9 +1,9 @@
 package com.stylefeng.guns.rest.modular.user;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.stylefeng.guns.api.user.UserAPI;
-import com.stylefeng.guns.api.user.UserInfoModel;
-import com.stylefeng.guns.api.user.UserModel;
+import com.stylefeng.guns.api.user.UserApi;
+import com.stylefeng.guns.api.user.vo.UserInfoModel;
+import com.stylefeng.guns.api.user.vo.UserModel;
 import com.stylefeng.guns.rest.common.CurrentUser;
 import com.stylefeng.guns.rest.modular.vo.ResponseVO;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * @author zjxjwxk
  */
-@RequestMapping("/user/")
 @RestController
+@RequestMapping("/user/")
 public class UserController {
 
-    @Reference(interfaceClass = UserAPI.class)
-    private UserAPI userAPI;
+    @Reference(interfaceClass = UserApi.class)
+    private UserApi userAPI;
 
     @RequestMapping(value = "register", method = RequestMethod.POST)
     public ResponseVO register(UserModel userModel) {
