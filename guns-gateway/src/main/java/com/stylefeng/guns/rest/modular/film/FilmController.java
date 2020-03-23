@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/film/")
 public class FilmController {
 
+    private static final String IMG_PRE = "img.zjxjwxk.com/";
+
     @Reference(interfaceClass = FilmServiceApi.class)
     private FilmServiceApi filmServiceApi;
 
@@ -44,6 +46,6 @@ public class FilmController {
         filmIndexVO.setExpectRanking(filmServiceApi.getExpectRanking());
         // 获取排行前100影片
         filmIndexVO.setTop100(filmServiceApi.getTop());
-        return ResponseVO.success(filmIndexVO);
+        return ResponseVO.success(IMG_PRE, filmIndexVO);
     }
 }
