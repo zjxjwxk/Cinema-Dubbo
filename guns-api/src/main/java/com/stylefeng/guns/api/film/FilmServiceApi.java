@@ -15,7 +15,7 @@ public interface FilmServiceApi {
      * 获取banners
      * @return BannerVO
      */
-    BannerVO getBanners();
+    List<BannerVO> getBanners();
 
     /**
      * 获取热映影片
