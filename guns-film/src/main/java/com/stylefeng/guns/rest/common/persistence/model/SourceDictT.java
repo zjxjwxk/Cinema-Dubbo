@@ -13,10 +13,10 @@ import java.io.Serializable;
  * </p>
  *
  * @author zjxjwxk
- * @since 2020-03-22
+ * @since 2020-03-26
  */
-@TableName("area_dict_t")
-public class AreaDictT extends Model<AreaDictT> {
+@TableName("source_dict_t")
+public class SourceDictT extends Model<SourceDictT> {
 
     private static final long serialVersionUID = 1L;
 
@@ -55,7 +55,7 @@ public class AreaDictT extends Model<AreaDictT> {
 
     @Override
     public String toString() {
-        return "AreaDictT{" +
+        return "SourceDictT{" +
         "uuid=" + uuid +
         ", showName=" + showName +
         "}";
