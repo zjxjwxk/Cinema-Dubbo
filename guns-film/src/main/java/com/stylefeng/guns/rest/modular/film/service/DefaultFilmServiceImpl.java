@@ -4,14 +4,10 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.api.film.FilmServiceApi;
-import com.stylefeng.guns.api.film.vo.BannerVO;
-import com.stylefeng.guns.api.film.vo.FilmInfo;
-import com.stylefeng.guns.api.film.vo.FilmVO;
+import com.stylefeng.guns.api.film.vo.*;
 import com.stylefeng.guns.core.util.DateUtil;
-import com.stylefeng.guns.rest.common.persistence.dao.BannerTMapper;
-import com.stylefeng.guns.rest.common.persistence.dao.FilmTMapper;
-import com.stylefeng.guns.rest.common.persistence.model.BannerT;
-import com.stylefeng.guns.rest.common.persistence.model.FilmT;
+import com.stylefeng.guns.rest.common.persistence.dao.*;
+import com.stylefeng.guns.rest.common.persistence.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +27,15 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
     @Autowired
     private FilmTMapper filmTMapper;
 
+    @Autowired
+    private CatDictTMapper catDictTMapper;
+
+    @Autowired
+    private SourceDictTMapper sourceDictTMapper;
+
+    @Autowired
+    private YearDictTMapper yearDictTMapper;
+
     @Override
     public List<BannerVO> getBanners() {
         List<BannerVO> bannerVOList = new ArrayList<>();
@@ -48,7 +53,7 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
     @Override
     public FilmVO getHotFilms(boolean isLimit, int nums) {
         FilmVO filmVO = new FilmVO();
-        List<FilmInfo> filmInfoList = new ArrayList<>();
+        List<FilmInfo> filmInfoList;
         // 热映影片的限制条件
         EntityWrapper<FilmT> entityWrapper = new EntityWrapper<>();
         entityWrapper.eq("film_status", "1");
@@ -71,7 +76,7 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
     @Override
     public FilmVO getSoonFilms(boolean isLimit, int nums) {
         FilmVO filmVO = new FilmVO();
-        List<FilmInfo> filmInfoList = new ArrayList<>();
+        List<FilmInfo> filmInfoList;
         // 即将上映影片的限制条件
         EntityWrapper<FilmT> entityWrapper = new EntityWrapper<>();
         entityWrapper.eq("film_status", "2");
@@ -119,6 +124,51 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
         Page<FilmT> page = new Page<>(1, 10, "film_score");
         List<FilmT> filmTList = filmTMapper.selectPage(page, entityWrapper);
         return getFilmInfoList(filmTList);
+    }
+
+    @Override
+    public List<CatVO> getCats() {
+        List<CatVO> catVOList = new ArrayList<>();
+        // 查询实体对象CatDictT
+        List<CatDictT> catDictTList = catDictTMapper.selectList(null);
+        // 将实体对象转换为业务对象CatVO
+        for (CatDictT catDictT : catDictTList) {
+            CatVO catVO = new CatVO();
+            catVO.setCatId(catDictT.getUuid() + "");
+            catVO.setCatName(catDictT.getShowName());
+            catVOList.add(catVO);
+        }
+        return catVOList;
+    }
+
+    @Override
+    public List<SourceVO> getSources() {
+        List<SourceVO> sourceVOList = new ArrayList<>();
+        // 查询实体对象SourceDictT
+        List<SourceDictT> sourceDictTList = sourceDictTMapper.selectList(null);
+        // 将实体对象转换为业务对象SourceVO
+        for (SourceDictT sourceDictT : sourceDictTList) {
+            SourceVO sourceVO = new SourceVO();
+            sourceVO.setSourceId(sourceDictT.getUuid() + "");
+            sourceVO.setSourceName(sourceDictT.getShowName());
+            sourceVOList.add(sourceVO);
+        }
+        return sourceVOList;
+    }
+
+    @Override
+    public List<YearVO> getYears() {
+        List<YearVO> yearVOList = new ArrayList<>();
+        // 查询实体对象YearDictT
+        List<YearDictT> yearDictTList = yearDictTMapper.selectList(null);
+        // 将实体对象转换为业务对象YearVO
+        for (YearDictT yearDictT : yearDictTList) {
+            YearVO yearVO = new YearVO();
+            yearVO.setYearId(yearDictT.getUuid() + "");
+            yearVO.setYearName(yearDictT.getShowName());
+            yearVOList.add(yearVO);
+        }
+        return yearVOList;
     }
 
     private List<FilmInfo> getFilmInfoList(List<FilmT> filmTList) {
