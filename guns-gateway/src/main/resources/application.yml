@@ -8,7 +8,7 @@ jwt:
   expiration: 604800      #7天 单位:秒
   auth-path: auth         #认证请求的路径
   md5-key: randomKey      #md5加密混淆key
-  ignore-url: /user/register,/user/check,/film/getIndex,/film/getConditionList #忽略列表
+  ignore-url: /user/register,/user/check,/film/getIndex,/film/getConditionList,/film/getFilms #忽略列表
 
 server:
   port: 80 #项目端口
@@ -33,6 +33,8 @@ spring:
   dubbo:
     server: true
     registry: zookeeper://localhost:2181
+    consumer:
+      check: false
   datasource:
       url: jdbc:mysql://127.0.0.1:3306/guns_rest?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
       username: root
