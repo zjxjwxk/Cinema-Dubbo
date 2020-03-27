@@ -3,10 +3,12 @@ package com.stylefeng.guns.rest.modular.film;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.stylefeng.guns.api.film.FilmServiceApi;
 import com.stylefeng.guns.api.film.vo.CatVO;
+import com.stylefeng.guns.api.film.vo.FilmVO;
 import com.stylefeng.guns.api.film.vo.SourceVO;
 import com.stylefeng.guns.api.film.vo.YearVO;
 import com.stylefeng.guns.rest.modular.film.vo.FilmConditionVO;
 import com.stylefeng.guns.rest.modular.film.vo.FilmIndexVO;
+import com.stylefeng.guns.rest.modular.film.vo.FilmRequestVO;
 import com.stylefeng.guns.rest.modular.vo.ResponseVO;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -45,9 +47,9 @@ public class FilmController {
         // 获取banner信息
         filmIndexVO.setBanners(filmServiceApi.getBanners());
         // 获取热映的影片
-        filmIndexVO.setHotFilms(filmServiceApi.getHotFilms(true, 8));
+        filmIndexVO.setHotFilms(filmServiceApi.getHotFilms(true, 99, 99, 99, 99, 1, 8));
         // 获取即将上映的影片
-        filmIndexVO.setSoonFilms(filmServiceApi.getSoonFilms(true, 8));
+        filmIndexVO.setSoonFilms(filmServiceApi.getSoonFilms(true, 99, 99, 99, 99, 1, 8));
         // 获取票房排行榜
         filmIndexVO.setBoxRanking(filmServiceApi.getBoxRanking());
         // 获取人气榜单
@@ -114,17 +116,14 @@ public class FilmController {
             } else {
                 sourceVO.setIsActive(false);
             }
-            // 无论是不是active状态，都加入catResult集合
             sourceResult.add(sourceVO);
         }
-        // 如果集合不存在catId，则默认将全部（99）变为active状态，并加入catResult集合
         if (!flag) {
             source.setIsActive(true);
         } else {
             source.setIsActive(false);
         }
         sourceResult.add(source);
-
 
         // 年代集合
         List<YearVO> yearVOList = filmServiceApi.getYears();
@@ -142,10 +141,8 @@ public class FilmController {
             } else {
                 yearVO.setIsActive(false);
             }
-            // 无论是不是active状态，都加入catResult集合
             yearResult.add(yearVO);
         }
-        // 如果集合不存在catId，则默认将全部（99）变为active状态，并加入catResult集合
         if (!flag) {
             year.setIsActive(true);
         } else {
@@ -159,4 +156,38 @@ public class FilmController {
 
         return ResponseVO.success(filmConditionVO);
     }
+
+
+    @RequestMapping(value = "getFilms", method = RequestMethod.GET)
+    public ResponseVO getFilms(FilmRequestVO filmRequestVO) {
+
+        FilmVO filmVO;
+        filmRequestVO.init();
+        // 根据showType判断影片查询类型
+        switch (filmRequestVO.getShowType()) {
+            case 1:
+                filmVO = filmServiceApi.getHotFilms(false, filmRequestVO.getSortId(),
+                        filmRequestVO.getCatId(), filmRequestVO.getSourceId(), filmRequestVO.getYearId(),
+                        filmRequestVO.getNowPage(), filmRequestVO.getPageSize());
+                break;
+            case 2:
+                filmVO = filmServiceApi.getSoonFilms(false, filmRequestVO.getSortId(),
+                        filmRequestVO.getCatId(), filmRequestVO.getSourceId(), filmRequestVO.getYearId(),
+                        filmRequestVO.getNowPage(), filmRequestVO.getPageSize());
+                break;
+            case 3:
+                filmVO = filmServiceApi.getClassicFilms(filmRequestVO.getSortId(),
+                        filmRequestVO.getCatId(), filmRequestVO.getSourceId(), filmRequestVO.getYearId(),
+                        filmRequestVO.getNowPage(), filmRequestVO.getPageSize());
+                break;
+            default:
+                filmVO = filmServiceApi.getHotFilms(false, filmRequestVO.getSortId(),
+                        filmRequestVO.getCatId(), filmRequestVO.getSourceId(), filmRequestVO.getYearId(),
+                        filmRequestVO.getNowPage(), filmRequestVO.getPageSize());
+                break;
+        }
+
+        return ResponseVO.success(filmVO.getNowPage(), filmVO.getTotalPage(), IMG_PRE, filmVO);
+    }
+
 }
