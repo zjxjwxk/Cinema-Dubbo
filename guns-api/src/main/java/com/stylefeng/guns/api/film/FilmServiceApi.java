@@ -18,18 +18,46 @@ public interface FilmServiceApi {
     /**
      * 获取热映影片
      * @param isLimit 数量是否受限
-     * @param nums 数量（受限时）
+     * @param sortId 排序方式，1-按热门搜索，2-按时间搜索，3-按评价搜索
+     * @param catId 类型编号
+     * @param sourceId 区域编号
+     * @param yearId 年代编号
+     * @param nowPage 列表当前页
+     * @param pageSize 每页显示条数（受限时）
+     *
      * @return FilmVO
      */
-    FilmVO getHotFilms(boolean isLimit, int nums);
+    FilmVO getHotFilms(boolean isLimit, int sortId,
+                       int catId, int sourceId, int yearId,
+                       int nowPage, int pageSize);
 
     /**
      * 获取即将上映的影片（按照欢迎程度做排序）
      * @param isLimit 数量是否受限
-     * @param nums 数量（受限时）
+     * @param sortId 排序方式，1-按热门搜索，2-按时间搜索，3-按评价搜索
+     * @param catId 类型编号
+     * @param sourceId 区域编号
+     * @param yearId 年代编号
+     * @param nowPage 列表当前页
+     * @param pageSize 每页显示条数（受限时）
      * @return FilmVO
      */
-    FilmVO getSoonFilms(boolean isLimit, int nums);
+    FilmVO getSoonFilms(boolean isLimit, int sortId,
+                        int catId, int sourceId, int yearId,
+                        int nowPage, int pageSize);
+
+    /**
+     * 获取经典影片
+     * @param sortId 排序方式，1-按热门搜索，2-按时间搜索，3-按评价搜索
+     * @param catId 类型编号
+     * @param sourceId 区域编号
+     * @param yearId 年代编号
+     * @param nowPage 列表当前页
+     * @param pageSize 每页显示条数（受限时）
+     * @return FilmVO
+     */
+    FilmVO getClassicFilms(int sortId, int catId, int sourceId, int yearId,
+                           int nowPage, int pageSize);
 
     /**
      * 获取票房排行榜
@@ -68,4 +96,6 @@ public interface FilmServiceApi {
      * @return YearVO集合
      */
     List<YearVO> getYears();
+
+
 }
