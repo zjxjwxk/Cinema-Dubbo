@@ -26,8 +26,28 @@ public class ResponseVO<M> {
      */
     private String imgPre;
 
+    /**
+     * 当前页（分页时）
+     */
+    private Integer nowPage;
+
+    /**
+     * 总页数（分页时）
+     */
+    private Integer totalPage;
+
 
     private ResponseVO() {}
+
+    public static<M> ResponseVO success(int nowPage, int totalPage, String imgPre, M m) {
+        ResponseVO responseVO = new ResponseVO();
+        responseVO.setStatus(0);
+        responseVO.setData(m);
+        responseVO.setImgPre(imgPre);
+        responseVO.setNowPage(nowPage);
+        responseVO.setTotalPage(totalPage);
+        return responseVO;
+    }
 
     public static<M> ResponseVO success(String imgPre, M m) {
         ResponseVO responseVO = new ResponseVO();
