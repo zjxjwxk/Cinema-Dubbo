@@ -2,18 +2,12 @@ package com.stylefeng.guns.rest.modular.film;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.stylefeng.guns.api.film.FilmServiceApi;
-import com.stylefeng.guns.api.film.vo.CatVO;
-import com.stylefeng.guns.api.film.vo.FilmVO;
-import com.stylefeng.guns.api.film.vo.SourceVO;
-import com.stylefeng.guns.api.film.vo.YearVO;
+import com.stylefeng.guns.api.film.vo.*;
 import com.stylefeng.guns.rest.modular.film.vo.FilmConditionVO;
 import com.stylefeng.guns.rest.modular.film.vo.FilmIndexVO;
 import com.stylefeng.guns.rest.modular.film.vo.FilmRequestVO;
 import com.stylefeng.guns.rest.modular.vo.ResponseVO;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -190,4 +184,41 @@ public class FilmController {
         return ResponseVO.success(filmVO.getNowPage(), filmVO.getTotalPage(), IMG_PRE, filmVO);
     }
 
+
+    @RequestMapping(value = "films/{searchParam}", method = RequestMethod.GET)
+    public ResponseVO films(@PathVariable("searchParam") String searchParam, int searchType) {
+
+        // 根据searchType，判断查询类型
+        FilmDetailVO filmDetailVO = filmServiceApi.getFilmDetail(searchType, searchParam);
+
+        if (filmDetailVO != null) {
+            String filmId = filmDetailVO.getFilmId();
+
+            // 查询影片的详细信息：Dubbo的异步调用
+
+            // 获取影片描述信息
+            FilmDescVO filmDescVO = filmServiceApi.getFilmDesc(filmId);
+
+            // 获取导演信息
+            ActorVO directorVO = filmServiceApi.getDirectorInfo(filmId);
+
+            // 获取演员信息
+            List<ActorVO> actors = filmServiceApi.getActors(filmId);
+
+            // 组织info04对象
+            InfoRequestVO infoRequestVO = new InfoRequestVO();
+            ActorRequestVO actorRequestVO = new ActorRequestVO();
+            actorRequestVO.setDirector(directorVO);
+            actorRequestVO.setActors(actors);
+
+            infoRequestVO.setBiography(filmDescVO.getBiography());
+            infoRequestVO.setActors(actorRequestVO);
+
+            // 设置filmDetail的info04对象
+            filmDetailVO.setInfo04(infoRequestVO);
+            return ResponseVO.success(IMG_PRE, filmDetailVO);
+        } else {
+            return ResponseVO.serviceFail("查询失败，无影片可加载");
+        }
+    }
 }
