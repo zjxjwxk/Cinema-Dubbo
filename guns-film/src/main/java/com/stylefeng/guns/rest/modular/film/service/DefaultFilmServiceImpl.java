@@ -36,10 +36,17 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
     @Autowired
     private YearDictTMapper yearDictTMapper;
 
+    @Autowired
+    private FilmInfoTMapper filmInfoTMapper;
+
+    @Autowired
+    private ActorTMapper actorTMapper;
+
     @Override
     public List<BannerVO> getBanners() {
         List<BannerVO> bannerVOList = new ArrayList<>();
         List<BannerT> bannerTList = bannerTMapper.selectList(null);
+
         for (BannerT bannerT : bannerTList) {
             BannerVO bannerVO = new BannerVO();
             bannerVO.setBannerId(bannerT.getUuid() + "");
@@ -66,6 +73,7 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
             List<FilmT> filmTList = filmTMapper.selectPage(page, entityWrapper);
             // 组织filmInfo
             filmInfoList = getFilmInfoList(filmTList);
+
             filmVO.setFilmNum(filmInfoList.size());
             filmVO.setFilmInfo(filmInfoList);
         } else {
@@ -130,6 +138,7 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
             List<FilmT> filmTList = filmTMapper.selectPage(page, entityWrapper);
             // 组织filmInfo
             filmInfoList = getFilmInfoList(filmTList);
+
             filmVO.setFilmNum(filmInfoList.size());
             filmVO.setFilmInfo(filmInfoList);
         } else {
@@ -268,6 +277,7 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
         List<CatVO> catVOList = new ArrayList<>();
         // 查询实体对象CatDictT
         List<CatDictT> catDictTList = catDictTMapper.selectList(null);
+
         // 将实体对象转换为业务对象CatVO
         for (CatDictT catDictT : catDictTList) {
             CatVO catVO = new CatVO();
@@ -283,6 +293,7 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
         List<SourceVO> sourceVOList = new ArrayList<>();
         // 查询实体对象SourceDictT
         List<SourceDictT> sourceDictTList = sourceDictTMapper.selectList(null);
+
         // 将实体对象转换为业务对象SourceVO
         for (SourceDictT sourceDictT : sourceDictTList) {
             SourceVO sourceVO = new SourceVO();
@@ -298,6 +309,7 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
         List<YearVO> yearVOList = new ArrayList<>();
         // 查询实体对象YearDictT
         List<YearDictT> yearDictTList = yearDictTMapper.selectList(null);
+
         // 将实体对象转换为业务对象YearVO
         for (YearDictT yearDictT : yearDictTList) {
             YearVO yearVO = new YearVO();
@@ -306,6 +318,49 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
             yearVOList.add(yearVO);
         }
         return yearVOList;
+    }
+
+    @Override
+    public FilmDetailVO getFilmDetail(int searchType, String searchParam) {
+        FilmDetailVO filmDetailVO;
+        // searchType：0表示按照编号查找，1表示按照名称查找
+        if (searchType == 0) {
+            filmDetailVO = filmTMapper.getFilmDetailById(searchParam);
+        } else {
+            filmDetailVO = filmTMapper.getFilmDetailByName(searchParam);
+        }
+        if (filmDetailVO != null) {
+            filmDetailVO.setImgs(getImgs(filmDetailVO.getFilmId()));
+        }
+        return filmDetailVO;
+    }
+
+    @Override
+    public FilmDescVO getFilmDesc(String filmId) {
+        FilmInfoT filmInfoT = getFilmInfo(filmId);
+        FilmDescVO filmDescVO = new FilmDescVO();
+
+        filmDescVO.setBiography(filmInfoT.getBiography());
+        return filmDescVO;
+    }
+
+    @Override
+    public ActorVO getDirectorInfo(String filmId) {
+        FilmInfoT filmInfoT = getFilmInfo(filmId);
+
+        // 获取导演编号
+        Integer directorId = filmInfoT.getDirectorId();
+        ActorT actorT = actorTMapper.selectById(directorId);
+
+        ActorVO actorVO = new ActorVO();
+        actorVO.setImgAddress(actorT.getActorImg());
+        actorVO.setDirectorName(actorT.getActorName());
+        return actorVO;
+    }
+
+    @Override
+    public List<ActorVO> getActors(String filmId) {
+        return actorTMapper.getActors(filmId);
     }
 
     private List<FilmInfo> getFilmInfoList(List<FilmT> filmTList) {
@@ -324,5 +379,33 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
             filmInfoList.add(filmInfo);
         }
         return filmInfoList;
+    }
+
+    /**
+     * 获取图片信息
+     * @param filmId 影片UUID
+     * @return ImgVO
+     */
+    private ImgVO getImgs(String filmId) {
+        FilmInfoT filmInfoT = getFilmInfo(filmId);
+        // 图片地址是5个以','为分隔符的链接url
+        String filmImgsStr = filmInfoT.getFilmImgs();
+        String[] filmImgs = filmImgsStr.split(",");
+
+        ImgVO imgVO = new ImgVO();
+        imgVO.setMainImg(filmImgs[0]);
+        imgVO.setImg01(filmImgs[1]);
+        imgVO.setImg02(filmImgs[2]);
+        imgVO.setImg03(filmImgs[3]);
+        imgVO.setImg04(filmImgs[4]);
+        return imgVO;
+    }
+
+    private FilmInfoT getFilmInfo(String filmId) {
+        FilmInfoT filmInfoT = new FilmInfoT();
+        filmInfoT.setFilmId(filmId);
+
+        filmInfoT = filmInfoTMapper.selectOne(filmInfoT);
+        return filmInfoT;
     }
 }
