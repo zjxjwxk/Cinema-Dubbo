@@ -1,6 +1,8 @@
 package com.stylefeng.guns.rest.modular.film;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.alibaba.dubbo.rpc.RpcContext;
+import com.stylefeng.guns.api.film.FilmAsyncServiceApi;
 import com.stylefeng.guns.api.film.FilmServiceApi;
 import com.stylefeng.guns.api.film.vo.*;
 import com.stylefeng.guns.rest.modular.film.vo.FilmConditionVO;
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 
 /**
@@ -24,6 +28,9 @@ public class FilmController {
 
     @Reference(interfaceClass = FilmServiceApi.class)
     private FilmServiceApi filmServiceApi;
+
+    @Reference(interfaceClass = FilmAsyncServiceApi.class, async = true)
+    private FilmAsyncServiceApi filmAsyncServiceApi;
 
     /**
      * 获取首页信息接口
@@ -186,39 +193,45 @@ public class FilmController {
 
 
     @RequestMapping(value = "films/{searchParam}", method = RequestMethod.GET)
-    public ResponseVO films(@PathVariable("searchParam") String searchParam, int searchType) {
+    public ResponseVO films(@PathVariable("searchParam") String searchParam, int searchType) throws ExecutionException, InterruptedException {
 
         // 根据searchType，判断查询类型
         FilmDetailVO filmDetailVO = filmServiceApi.getFilmDetail(searchType, searchParam);
 
-        if (filmDetailVO != null) {
+        if (filmDetailVO == null || filmDetailVO.getFilmId() == null || filmDetailVO.getFilmId().trim().length() == 0) {
+            return ResponseVO.serviceFail("查询失败，无影片可加载");
+        } else {
             String filmId = filmDetailVO.getFilmId();
 
             // 查询影片的详细信息：Dubbo的异步调用
 
             // 获取影片描述信息
-            FilmDescVO filmDescVO = filmServiceApi.getFilmDesc(filmId);
+//            FilmDescVO filmDescVO = filmAsyncServiceApi.getFilmDesc(filmId);
+            filmAsyncServiceApi.getFilmDesc(filmId);
+            Future<FilmDescVO> filmDescVOFuture = RpcContext.getContext().getFuture();
 
             // 获取导演信息
-            ActorVO directorVO = filmServiceApi.getDirectorInfo(filmId);
+//            ActorVO directorVO = filmAsyncServiceApi.getDirectorInfo(filmId);
+            filmAsyncServiceApi.getDirectorInfo(filmId);
+            Future<ActorVO> directorVOFuture = RpcContext.getContext().getFuture();
 
             // 获取演员信息
-            List<ActorVO> actors = filmServiceApi.getActors(filmId);
+//            List<ActorVO> actors = filmAsyncServiceApi.getActors(filmId);
+            filmAsyncServiceApi.getActors(filmId);
+            Future<List<ActorVO>> actorsFuture = RpcContext.getContext().getFuture();
 
             // 组织info04对象
             InfoRequestVO infoRequestVO = new InfoRequestVO();
             ActorRequestVO actorRequestVO = new ActorRequestVO();
-            actorRequestVO.setDirector(directorVO);
-            actorRequestVO.setActors(actors);
+            actorRequestVO.setDirector(directorVOFuture.get());
+            actorRequestVO.setActors(actorsFuture.get());
 
-            infoRequestVO.setBiography(filmDescVO.getBiography());
+            infoRequestVO.setBiography(filmDescVOFuture.get().getBiography());
             infoRequestVO.setActors(actorRequestVO);
 
             // 设置filmDetail的info04对象
             filmDetailVO.setInfo04(infoRequestVO);
             return ResponseVO.success(IMG_PRE, filmDetailVO);
-        } else {
-            return ResponseVO.serviceFail("查询失败，无影片可加载");
         }
     }
 }
