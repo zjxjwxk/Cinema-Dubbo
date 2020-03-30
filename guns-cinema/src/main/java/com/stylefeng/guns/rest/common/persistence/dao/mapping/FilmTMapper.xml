@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stylefeng.guns.rest.common.persistence.dao.FilmTMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.stylefeng.guns.rest.common.persistence.model.FilmT">
+        <id column="UUID" property="uuid" />
+        <result column="film_name" property="filmName" />
+        <result column="film_type" property="filmType" />
+        <result column="img_address" property="imgAddress" />
+        <result column="film_score" property="filmScore" />
+        <result column="film_preSaleNum" property="filmPresalenum" />
+        <result column="film_box_office" property="filmBoxOffice" />
+        <result column="film_source" property="filmSource" />
+        <result column="film_cats" property="filmCats" />
+        <result column="film_area" property="filmArea" />
+        <result column="film_date" property="filmDate" />
+        <result column="film_time" property="filmTime" />
+        <result column="film_status" property="filmStatus" />
+    </resultMap>
+
+    <select id="getFilmDetailById" parameterType="java.lang.String" resultType="com.stylefeng.guns.api.film.vo.FilmDetailVO">
+        SELECT
+            film_t.UUID AS filmId,
+            film_t.film_name AS filmName,
+            film_info_t.film_en_name AS filmEnName,
+            film_t.img_address AS imgAddress,
+            film_t.film_score AS score,
+            film_info_t.film_score_num AS scoreNum,
+            film_t.film_box_office AS totalBox,
+            (SELECT GROUP_CONCAT(show_name SEPARATOR ',') FROM cat_dict_t
+             WHERE FIND_IN_SET(
+                           cat_dict_t.UUID, (SELECT REPLACE(TRIM(BOTH '#' FROM film_cats),'#',',') FROM film_t t WHERE t.UUID = film_t.UUID)
+                       )) AS info01,
+            CONCAT((SELECT show_name FROM source_dict_t WHERE source_dict_t.UUID = film_t.film_source),' / ',film_info_t.`film_length`,'分钟') AS info02,
+            CONCAT(film_t.`film_time`,' ',(SELECT show_name FROM source_dict_t WHERE source_dict_t.UUID = film_t.film_source),'上映') AS info03
+        FROM film_t, film_info_t
+        WHERE film_t.UUID = film_info_t.film_id
+          AND film_t.UUID = #{uuid}
+    </select>
+
+    <select id="getFilmDetailByName" parameterType="java.lang.String" resultType="com.stylefeng.guns.api.film.vo.FilmDetailVO">
+        SELECT
+            film_t.UUID AS filmId,
+            film_t.film_name AS filmName,
+            film_info_t.film_en_name AS filmEnName,
+            film_t.img_address AS imgAddress,
+            film_t.film_score AS score,
+            film_info_t.film_score_num AS scoreNum,
+            film_t.film_box_office AS totalBox,
+            (SELECT GROUP_CONCAT(show_name SEPARATOR ',') FROM cat_dict_t
+             WHERE FIND_IN_SET(
+                           cat_dict_t.UUID, (SELECT REPLACE(TRIM(BOTH '#' FROM film_cats),'#',',') FROM film_t t WHERE t.UUID = film_t.UUID)
+                       )) AS info01,
+            CONCAT((SELECT show_name FROM source_dict_t WHERE source_dict_t.UUID = film_t.film_source),' / ',film_info_t.`film_length`,'分钟') AS info02,
+            CONCAT(film_t.`film_time`,' ',(SELECT show_name FROM source_dict_t WHERE source_dict_t.UUID = film_t.film_source),'上映') AS info03
+        FROM film_t, film_info_t
+        WHERE film_t.UUID = film_info_t.film_id
+          AND film_t.film_name LIKE #{filmName}
+    </select>
+</mapper>
