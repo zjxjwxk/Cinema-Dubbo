@@ -16,7 +16,10 @@ public class CinemaRequestVO implements Serializable {
     private Integer pageSize;
     private Integer nowPage;
 
-    void init() {
+    /**
+     * 初始化为默认值，需要手动调用避免一些问题
+     */
+    public void init() {
         if (this.brandId == null) {
             this.brandId = 99;
         }
