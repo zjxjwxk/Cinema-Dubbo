@@ -16,6 +16,9 @@ public class FilmRequestVO {
     private Integer nowPage;
     private Integer pageSize;
 
+    /**
+     * 初始化为默认值，需要手动调用避免一些问题
+     */
     public void init() {
         if (this.showType == null) {
             this.showType = 1;
