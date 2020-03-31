@@ -9,14 +9,14 @@ import java.io.Serializable;
 
 /**
  * <p>
- * 年代信息表
+ * 地域信息表
  * </p>
  *
  * @author zjxjwxk
- * @since 2020-03-22
+ * @since 2020-03-31
  */
-@TableName("year_dict_t")
-public class YearDictT extends Model<YearDictT> {
+@TableName("hall_dict_t")
+public class HallDictT extends Model<HallDictT> {
 
     private static final long serialVersionUID = 1L;
 
@@ -30,6 +30,11 @@ public class YearDictT extends Model<YearDictT> {
      */
     @TableField("show_name")
     private String showName;
+    /**
+     * 座位文件存放地址
+     */
+    @TableField("seat_address")
+    private String seatAddress;
 
 
     public Integer getUuid() {
@@ -48,6 +53,14 @@ public class YearDictT extends Model<YearDictT> {
         this.showName = showName;
     }
 
+    public String getSeatAddress() {
+        return seatAddress;
+    }
+
+    public void setSeatAddress(String seatAddress) {
+        this.seatAddress = seatAddress;
+    }
+
     @Override
     protected Serializable pkVal() {
         return this.uuid;
@@ -55,9 +68,10 @@ public class YearDictT extends Model<YearDictT> {
 
     @Override
     public String toString() {
-        return "YearDictT{" +
+        return "HallDictT{" +
         "uuid=" + uuid +
         ", showName=" + showName +
+        ", seatAddress=" + seatAddress +
         "}";
     }
 }

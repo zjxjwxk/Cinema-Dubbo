@@ -9,14 +9,14 @@ import java.io.Serializable;
 
 /**
  * <p>
- * 区域信息表
+ * 品牌信息表
  * </p>
  *
  * @author zjxjwxk
- * @since 2020-03-26
+ * @since 2020-03-31
  */
-@TableName("source_dict_t")
-public class SourceDictT extends Model<SourceDictT> {
+@TableName("brand_dict_t")
+public class BrandDictT extends Model<BrandDictT> {
 
     private static final long serialVersionUID = 1L;
 
@@ -55,7 +55,7 @@ public class SourceDictT extends Model<SourceDictT> {
 
     @Override
     public String toString() {
-        return "SourceDictT{" +
+        return "BrandDictT{" +
         "uuid=" + uuid +
         ", showName=" + showName +
         "}";
