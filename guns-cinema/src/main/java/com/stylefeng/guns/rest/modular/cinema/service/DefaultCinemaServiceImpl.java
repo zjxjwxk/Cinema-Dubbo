@@ -4,8 +4,11 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.api.cinema.CinemaServiceApi;
 import com.stylefeng.guns.api.cinema.vo.*;
-import com.stylefeng.guns.rest.common.persistence.dao.CinemaTMapper;
+import com.stylefeng.guns.rest.common.persistence.dao.*;
+import com.stylefeng.guns.rest.common.persistence.model.AreaDictT;
+import com.stylefeng.guns.rest.common.persistence.model.BrandDictT;
 import com.stylefeng.guns.rest.common.persistence.model.CinemaT;
+import com.stylefeng.guns.rest.common.persistence.model.HallDictT;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -18,6 +21,18 @@ public class DefaultCinemaServiceImpl implements CinemaServiceApi {
 
     @Autowired
     private CinemaTMapper cinemaTMapper;
+
+    @Autowired
+    private BrandDictTMapper brandDictTMapper;
+
+    @Autowired
+    private AreaDictTMapper areaDictTMapper;
+
+    @Autowired
+    private HallDictTMapper hallDictTMapper;
+
+    @Autowired
+    private FieldTMapper fieldTMapper;
 
     @Override
     public Page<CinemaVO> getCinemas(CinemaRequestVO cinemaRequestVO) {
@@ -64,36 +79,119 @@ public class DefaultCinemaServiceImpl implements CinemaServiceApi {
 
     @Override
     public List<BrandVO> getBrands(int brandId) {
-        return null;
+        boolean flag = false;
+        List<BrandVO> brandVOList = new ArrayList<>();
+        BrandDictT brandDictT = brandDictTMapper.selectById(brandId);
+        // 判断传入的id是否存在，或是否为99
+        if (brandId == 99 || brandDictT == null || brandDictT.getUuid() == null) {
+            flag = true;
+        }
+        // 查询所有列表
+        List<BrandDictT> brandDictTList = brandDictTMapper.selectList(null);
+        for (BrandDictT brand : brandDictTList) {
+            BrandVO brandVO = new BrandVO();
+            brandVO.setBrandId(brand.getUuid() + "");
+            brandVO.setBrandName(brand.getShowName());
+            // 如果flag == true，则所有的isActive都置为true；否则，仅将编号为brandId的isActive置为true
+            if (flag) {
+                if (brand.getUuid() == 99) {
+                    brandVO.setIsActive(true);
+                }
+            } else {
+                if (brand.getUuid() == brandId) {
+                    brandVO.setIsActive(true);
+                }
+            }
+            brandVOList.add(brandVO);
+        }
+        return brandVOList;
     }
 
     @Override
     public List<AreaVO> getAreas(int areaId) {
-        return null;
+        boolean flag = false;
+        List<AreaVO> areaVOList = new ArrayList<>();
+        AreaDictT areaDictT = areaDictTMapper.selectById(areaId);
+        // 判断传入的id是否存在，或是否为99
+        if (areaId == 99 || areaDictT == null || areaDictT.getUuid() == null) {
+            flag = true;
+        }
+        // 查询所有列表
+        List<AreaDictT> areaDictTList = areaDictTMapper.selectList(null);
+        for (AreaDictT area : areaDictTList) {
+            AreaVO areaVO = new AreaVO();
+            areaVO.setAreaId(area.getUuid() + "");
+            areaVO.setAreaName(area.getShowName());
+            // 如果flag == true，则所有的isActive都置为true；否则，仅将编号为areaId的isActive置为true
+            if (flag) {
+                if (area.getUuid() == 99) {
+                    areaVO.setIsActive(true);
+                }
+            } else {
+                if (area.getUuid() == areaId) {
+                    areaVO.setIsActive(true);
+                }
+            }
+            areaVOList.add(areaVO);
+        }
+        return areaVOList;
     }
 
     @Override
     public List<HallTypeVO> getHallTypes(int hallType) {
-        return null;
+        boolean flag = false;
+        List<HallTypeVO> hallTypeVOList = new ArrayList<>();
+        HallDictT hallDictT = hallDictTMapper.selectById(hallType);
+        // 判断传入的id是否存在，或是否为99
+        if (hallType == 99 || hallDictT == null || hallDictT.getUuid() == null) {
+            flag = true;
+        }
+        // 查询所有列表
+        List<HallDictT> hallDictTList = hallDictTMapper.selectList(null);
+        for (HallDictT hall : hallDictTList) {
+            HallTypeVO hallTypeVO = new HallTypeVO();
+            hallTypeVO.setHallTypeId(hall.getUuid() + "");
+            hallTypeVO.setHallTypeName(hall.getShowName());
+            // 如果flag == true，则所有的isActive都置为true；否则，仅将编号为hallTypeId的isActive置为true
+            if (flag) {
+                if (hall.getUuid() == 99) {
+                    hallTypeVO.setIsActive(true);
+                }
+            } else {
+                if (hall.getUuid() == hallType) {
+                    hallTypeVO.setIsActive(true);
+                }
+            }
+            hallTypeVOList.add(hallTypeVO);
+        }
+        return hallTypeVOList;
     }
 
     @Override
     public CinemaInfoVO getCinemaInfo(int cinemaId) {
-        return null;
+        CinemaT cinemaT = cinemaTMapper.selectById(cinemaId);
+
+        CinemaInfoVO cinemaInfoVO = new CinemaInfoVO();
+        cinemaInfoVO.setCinemaId(cinemaT.getUuid() + "");
+        cinemaInfoVO.setImgUrl(cinemaT.getImgAddress());
+        cinemaInfoVO.setCinemaName(cinemaT.getCinemaName());
+        cinemaInfoVO.setCinemaAddress(cinemaT.getCinemaAddress());
+        cinemaInfoVO.setCinemaPhone(cinemaT.getCinemaPhone());
+        return cinemaInfoVO;
     }
 
     @Override
-    public FilmInfoVO getFilmInfoByCinemaId(int cinemaId) {
-        return null;
+    public List<FilmInfoVO> getFilmListByCinemaId(int cinemaId) {
+        return fieldTMapper.getFilmInfoListByCinemaId(cinemaId);
     }
 
     @Override
-    public FilmFieldVO getFilmField(int fieldId) {
-        return null;
+    public HallInfoVO getFilmField(int fieldId) {
+        return fieldTMapper.getHallInfo(fieldId);
     }
 
     @Override
     public FilmInfoVO getFilmInfoByFieldId(int fieldId) {
-        return null;
+        return fieldTMapper.getFilmInfoById(fieldId);
     }
 }
