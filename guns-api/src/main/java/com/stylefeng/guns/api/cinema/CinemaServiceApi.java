@@ -50,14 +50,14 @@ public interface CinemaServiceApi {
      * @param cinemaId 影院编号
      * @return 影片信息VO
      */
-    FilmInfoVO getFilmInfoByCinemaId(int cinemaId);
+    List<FilmInfoVO> getFilmListByCinemaId(int cinemaId);
 
     /**
      * 根据放映场次编号获取放映信息
      * @param fieldId 放映场次编号
      * @return 放映信息VO
      */
-    FilmFieldVO getFilmField(int fieldId);
+    HallInfoVO getFilmField(int fieldId);
 
     /**
      * 根据放映场次编号查询对应的电影编号，然后根据电影编号获取对应的电影信息
