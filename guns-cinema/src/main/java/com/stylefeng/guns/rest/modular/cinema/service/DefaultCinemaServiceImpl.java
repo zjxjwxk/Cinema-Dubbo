@@ -1,5 +1,6 @@
 package com.stylefeng.guns.rest.modular.cinema.service;
 
+import com.alibaba.dubbo.config.annotation.Service;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.api.cinema.CinemaServiceApi;
@@ -10,6 +11,7 @@ import com.stylefeng.guns.rest.common.persistence.model.BrandDictT;
 import com.stylefeng.guns.rest.common.persistence.model.CinemaT;
 import com.stylefeng.guns.rest.common.persistence.model.HallDictT;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +19,8 @@ import java.util.List;
 /**
  * @author zjxjwxk
  */
+@Component
+@Service(interfaceClass = CinemaServiceApi.class)
 public class DefaultCinemaServiceImpl implements CinemaServiceApi {
 
     @Autowired
