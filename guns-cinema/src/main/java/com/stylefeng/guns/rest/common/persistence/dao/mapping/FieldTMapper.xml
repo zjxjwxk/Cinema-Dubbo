@@ -15,7 +15,7 @@
     </resultMap>
 
     <!-- 一对多查询 -->
-    <resultMap id="getFilmInfoMap" type="com.stylefeng.guns.api.cinema.vo.FilmInfoVO;">
+    <resultMap id="getFilmInfoMap" type="com.stylefeng.guns.api.cinema.vo.FilmInfoVO">
         <result column="film_id" property="filmId"></result>
         <result column="film_name" property="filmName"></result>
         <result column="film_length" property="filmLength"></result>
