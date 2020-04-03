@@ -41,20 +41,19 @@ public class DefaultCinemaServiceImpl implements CinemaServiceApi {
     @Override
     public Page<CinemaVO> getCinemas(CinemaRequestVO cinemaRequestVO) {
 
-        cinemaRequestVO.init();
         List<CinemaVO> cinemaVOList = new ArrayList<>();
         Page<CinemaT> page = new Page<>(cinemaRequestVO.getNowPage(), cinemaRequestVO.getPageSize());
         EntityWrapper<CinemaT> entityWrapper = new EntityWrapper<>();
 
-        // 判断是否传入查询条件：brandId，hallType，districtId 是否为99（表示全部）
+        // 判断是否传入查询条件：brandId，hallType，areaId 是否为99（表示全部）
         if (cinemaRequestVO.getBrandId() != 99) {
             entityWrapper.eq("brand_id", cinemaRequestVO.getBrandId());
         }
         if (cinemaRequestVO.getHallType() != 99) {
             entityWrapper.like("hall_ids", "%#" + cinemaRequestVO.getHallType() + "#%");
         }
-        if (cinemaRequestVO.getDistrictId() != 99) {
-            entityWrapper.eq("area_id", cinemaRequestVO.getDistrictId());
+        if (cinemaRequestVO.getAreaId() != 99) {
+            entityWrapper.eq("area_id", cinemaRequestVO.getAreaId());
         }
 
         List<CinemaT> cinemaTList = cinemaTMapper.selectPage(page, entityWrapper);
@@ -100,10 +99,14 @@ public class DefaultCinemaServiceImpl implements CinemaServiceApi {
             if (flag) {
                 if (brand.getUuid() == 99) {
                     brandVO.setIsActive(true);
+                } else {
+                    brandVO.setIsActive(false);
                 }
             } else {
                 if (brand.getUuid() == brandId) {
                     brandVO.setIsActive(true);
+                } else {
+                    brandVO.setIsActive(false);
                 }
             }
             brandVOList.add(brandVO);
@@ -130,10 +133,14 @@ public class DefaultCinemaServiceImpl implements CinemaServiceApi {
             if (flag) {
                 if (area.getUuid() == 99) {
                     areaVO.setIsActive(true);
+                } else {
+                    areaVO.setIsActive(false);
                 }
             } else {
                 if (area.getUuid() == areaId) {
                     areaVO.setIsActive(true);
+                } else {
+                    areaVO.setIsActive(false);
                 }
             }
             areaVOList.add(areaVO);
@@ -160,10 +167,14 @@ public class DefaultCinemaServiceImpl implements CinemaServiceApi {
             if (flag) {
                 if (hall.getUuid() == 99) {
                     hallTypeVO.setIsActive(true);
+                } else {
+                    hallTypeVO.setIsActive(false);
                 }
             } else {
                 if (hall.getUuid() == hallType) {
                     hallTypeVO.setIsActive(true);
+                } else {
+                    hallTypeVO.setIsActive(false);
                 }
             }
             hallTypeVOList.add(hallTypeVO);
