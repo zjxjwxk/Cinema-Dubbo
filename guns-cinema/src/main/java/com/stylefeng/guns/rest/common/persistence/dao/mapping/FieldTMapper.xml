@@ -54,7 +54,7 @@
                               AND field_t.cinema_id = ${cinemaId}
     </select>
 
-    <select id="getHallInfo" parameterType="java.lang.Integer" resultType="com.stylefeng.guns.api.cinema.vo.FilmInfoVO">
+    <select id="getHallInfo" parameterType="java.lang.Integer" resultType="com.stylefeng.guns.api.cinema.vo.HallInfoVO">
         SELECT
             field_t.UUID AS hallFieldId,
             field_t.hall_name AS hallName,
