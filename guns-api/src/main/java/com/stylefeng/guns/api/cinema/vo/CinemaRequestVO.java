@@ -12,7 +12,7 @@ public class CinemaRequestVO implements Serializable {
 
     private Integer brandId;
     private Integer hallType;
-    private Integer districtId;
+    private Integer areaId;
     private Integer pageSize;
     private Integer nowPage;
 
@@ -26,8 +26,8 @@ public class CinemaRequestVO implements Serializable {
         if (this.hallType == null) {
             this.hallType = 99;
         }
-        if (this.districtId == null) {
-            this.districtId = 99;
+        if (this.areaId == null) {
+            this.areaId = 99;
         }
         if (this.pageSize == null) {
             this.pageSize = 12;
