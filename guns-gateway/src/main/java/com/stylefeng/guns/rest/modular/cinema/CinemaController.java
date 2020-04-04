@@ -26,7 +26,7 @@ public class CinemaController {
 
     private static final String IMG_PRE = "img.zjxjwxk.com/";
 
-    @Reference(interfaceClass = CinemaServiceApi.class, check = false)
+    @Reference(interfaceClass = CinemaServiceApi.class, cache = "lru", check = false)
     private CinemaServiceApi cinemaServiceApi;
 
     @RequestMapping(value = "getCinemas")
@@ -52,6 +52,9 @@ public class CinemaController {
         }
     }
 
+    /**
+     * 热点数据（放缓存）
+     */
     @RequestMapping(value = "getCondition")
     public ResponseVO getCondition(CinemaRequestVO cinemaRequestVO) {
 
