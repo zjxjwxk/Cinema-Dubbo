@@ -35,6 +35,7 @@ spring:
     protocol:
       name: dubbo
       port: 20883
+      accepts: 10
   datasource:
       url: jdbc:mysql://127.0.0.1:3306/guns_rest?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
       username: root
