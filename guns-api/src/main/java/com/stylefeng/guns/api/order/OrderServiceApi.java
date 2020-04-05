@@ -15,7 +15,7 @@ public interface OrderServiceApi {
      * @param seats 座位号
      * @return 是否为真
      */
-    boolean isTrueSeats(String fieldId, String seats);
+    boolean isTrueSeats(Integer fieldId, String seats);
 
     /**
      * 检查所购买的票是否已售出
@@ -23,7 +23,7 @@ public interface OrderServiceApi {
      * @param seats 座位号
      * @return 是否
      */
-    boolean isSoldSeats(String fieldId, String seats);
+    boolean isSoldSeats(Integer fieldId, String seats);
 
     /**
      * 创建订单信息
