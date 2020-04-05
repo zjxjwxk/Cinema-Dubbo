@@ -46,8 +46,7 @@ public class CinemaController {
             }
         } catch (Exception e) {
             // 异常处理
-            e.printStackTrace();
-            log.error("查询影院列表失败");
+            log.error("查询影院列表失败", e);
             return ResponseVO.serviceFail("查询影院列表失败");
         }
     }
@@ -70,8 +69,7 @@ public class CinemaController {
             cinemaConditionResponseVO.setHalltypeList(hallTypeVOList);
             return ResponseVO.success(cinemaConditionResponseVO);
         } catch (Exception e) {
-            e.printStackTrace();
-            log.error("获取影院查询条件列表失败");
+            log.error("获取影院查询条件列表失败", e);
             return ResponseVO.serviceFail("获取影院查询条件列表失败");
         }
     }
@@ -86,8 +84,7 @@ public class CinemaController {
             cinemaFieldResponseVO.setFilmList(filmInfoVOList);
             return ResponseVO.success(IMG_PRE, cinemaFieldResponseVO);
         } catch (Exception e) {
-            e.printStackTrace();
-            log.error("获取放映场次失败");
+            log.error("获取放映场次失败", e);
             return ResponseVO.serviceFail("获取放映场次失败");
         }
     }
@@ -106,8 +103,7 @@ public class CinemaController {
             cinemaFieldInfoResponseVO.setHallInfo(hallInfoVO);
             return ResponseVO.success(IMG_PRE, cinemaFieldInfoResponseVO);
         } catch (Exception e) {
-            e.printStackTrace();
-            log.error("获取场次详细信息失败");
+            log.error("获取场次详细信息失败", e);
             return ResponseVO.serviceFail("获取场次详细信息失败");
         }
     }
