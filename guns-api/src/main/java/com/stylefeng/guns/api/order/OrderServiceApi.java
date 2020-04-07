@@ -1,5 +1,6 @@
 package com.stylefeng.guns.api.order;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.api.order.vo.OrderVO;
 
 import java.util.List;
@@ -40,7 +41,7 @@ public interface OrderServiceApi {
      * @param userId 用户编号
      * @return 订单VO列表
      */
-    List<OrderVO> getOrderVOListByUserId(Integer userId);
+    Page<OrderVO> getOrderVOListByUserId(Integer userId, Page<OrderVO> page);
 
     /**
      * 根据放映场次编号获取所有已经售出的座位编号
