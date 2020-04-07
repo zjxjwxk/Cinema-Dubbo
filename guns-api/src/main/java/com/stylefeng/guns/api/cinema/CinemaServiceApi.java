@@ -65,4 +65,6 @@ public interface CinemaServiceApi {
      * @return 电影信息VO
      */
     FilmInfoVO getFilmInfoByFieldId(int fieldId);
+
+    OrderQueryVO getOrderQueryVOByFieldId(int fieldId);
 }
