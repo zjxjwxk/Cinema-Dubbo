@@ -1,5 +1,6 @@
 package com.stylefeng.guns.rest.common.persistence.dao;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.api.order.vo.OrderVO;
 import com.stylefeng.guns.rest.common.persistence.model.OrderT;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
@@ -26,7 +27,7 @@ public interface OrderTMapper extends BaseMapper<OrderT> {
 
     OrderVO getOrderVOById(@Param("orderId") String orderId);
 
-    List<OrderVO> getOrderVOListByUserId(@Param("userId") Integer userId);
+    List<OrderVO> getOrderVOListByUserId(@Param("userId") Integer userId, Page<OrderVO> page);
 
     String getSoldSeatsByFieldId(@Param("fieldId") Integer fieldId);
 }

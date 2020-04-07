@@ -4,6 +4,7 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.api.cinema.CinemaServiceApi;
 import com.stylefeng.guns.api.cinema.vo.OrderQueryVO;
 import com.stylefeng.guns.api.order.OrderServiceApi;
@@ -65,7 +66,7 @@ public class DefaultOrderServiceImpl implements OrderServiceApi {
     @Override
     public boolean isSoldSeats(Integer fieldId, String seats) {
         EntityWrapper entityWrapper = new EntityWrapper();
-        entityWrapper.eq("fieldId", fieldId);
+        entityWrapper.eq("field_id", fieldId);
         List<OrderT> orderTList = orderTMapper.selectList(entityWrapper);
         String[] seatArr = seats.split(",");
         // 遍历该放映场次的所有订单，如果存在某一订单的座位包含seats中的座位，则表示已售出
@@ -122,16 +123,26 @@ public class DefaultOrderServiceImpl implements OrderServiceApi {
     }
 
     @Override
-    public List<OrderVO> getOrderVOListByUserId(Integer userId) {
+    public Page<OrderVO> getOrderVOListByUserId(Integer userId, Page<OrderVO> page) {
+        Page<OrderVO> result = new Page<>();
         if (userId == null) {
             log.error("用户订单查询失败，用户编号未传入");
             return null;
         } else {
-            List<OrderVO> orderVOList = orderTMapper.getOrderVOListByUserId(userId);
+            List<OrderVO> orderVOList = orderTMapper.getOrderVOListByUserId(userId, page);
             if (orderVOList == null || orderVOList.size() == 0) {
-                return new ArrayList<>();
+                result.setTotal(0);
+                result.setRecords(new ArrayList<>());
+                return result;
             } else {
-                return orderVOList;
+                // 获取订单总数
+                EntityWrapper<OrderT> entityWrapper = new EntityWrapper<>();
+                entityWrapper.eq("order_user", userId);
+                Integer count = orderTMapper.selectCount(entityWrapper);
+                // 将结果放入Page
+                result.setTotal(count);
+                result.setRecords(orderVOList);
+                return result;
             }
         }
     }
