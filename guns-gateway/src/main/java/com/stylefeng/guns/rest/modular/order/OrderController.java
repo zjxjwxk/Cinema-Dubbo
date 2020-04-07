@@ -1,6 +1,7 @@
 package com.stylefeng.guns.rest.modular.order;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.api.order.OrderServiceApi;
 import com.stylefeng.guns.api.order.vo.OrderVO;
 import com.stylefeng.guns.rest.common.CurrentUser;
@@ -25,6 +26,11 @@ public class OrderController {
     @RequestMapping(value = "buyTickets", method = RequestMethod.POST)
     public ResponseVO buyTickets(Integer fieldId, String soldSeats, String seatsName) {
         try {
+            // 获取当前用户的信息
+            String userId = CurrentUser.getCurrentUser();
+            if (userId == null || userId.trim().length() == 0) {
+                return ResponseVO.serviceFail("用户未登录");
+            }
             // 验证所购买的票是否为真
             boolean isTrue = orderServiceApi.isTrueSeats(fieldId, soldSeats);
             // 检查所购买的票是否已售出
@@ -33,7 +39,6 @@ public class OrderController {
             // 验证上面两个条件，当所购买的票为真，且未售出时，才创建订单
             if (isTrue && !isSold) {
                 // 创建订单信息
-                String userId = CurrentUser.getCurrentUser();
                 OrderVO orderVO = orderServiceApi.saveOrderInfo(fieldId, soldSeats, seatsName, Integer.parseInt(userId));
                 if (orderVO == null) {
                     log.error("购票未成功");
@@ -54,9 +59,13 @@ public class OrderController {
     public ResponseVO getOrderInfo(@RequestParam(name = "nowPage", required = false, defaultValue = "1") Integer nowPage,
                                    @RequestParam(name = "pageSize", required = false, defaultValue = "5") Integer pageSize) {
         // 获取当前用户的信息
-
+        String userId = CurrentUser.getCurrentUser();
+        if (userId == null || userId.trim().length() == 0) {
+            return ResponseVO.serviceFail("用户未登录");
+        }
         // 获取当前用户的订单
-
-        return null;
+        Page<OrderVO> page = new Page<>(nowPage, pageSize);
+        Page<OrderVO> orderVOPage = orderServiceApi.getOrderVOListByUserId(Integer.parseInt(userId), page);
+        return ResponseVO.success(nowPage, (int) orderVOPage.getPages(), "", orderVOPage.getRecords());
     }
 }
