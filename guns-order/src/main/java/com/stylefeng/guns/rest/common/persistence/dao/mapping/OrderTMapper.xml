@@ -20,7 +20,7 @@
     <select id="getSeatsByFieldId" parameterType="java.lang.Integer" resultType="java.lang.String">
         SELECT hall_dict_t.seat_address AS seatAddress FROM field_t, hall_dict_t
         WHERE field_t.hall_id = hall_dict_t.UUID
-          AND field_t.UUID = ${fieldId}
+          AND field_t.UUID = #{fieldId}
     </select>
     
     <select id="getOrderVOById" parameterType="java.lang.String" resultType="com.stylefeng.guns.api.order.vo.OrderVO">
@@ -36,7 +36,7 @@
         WHERE order_t.cinema_id = cinema_t.UUID
           AND order_t.field_id = field_t.UUID
           AND order_t.film_id = hall_film_info_t.film_id
-          AND order_t.UUID = ${orderId}
+          AND order_t.UUID = #{orderId}
     </select>
 
     <select id="getOrderVOListByUserId" parameterType="java.lang.Integer" resultType="com.stylefeng.guns.api.order.vo.OrderVO">
@@ -52,11 +52,11 @@
         WHERE order_t.cinema_id = cinema_t.UUID
           AND order_t.field_id = field_t.UUID
           AND order_t.film_id = hall_film_info_t.film_id
-          AND order_t.order_user = ${userId}
+          AND order_t.order_user = #{userId}
     </select>
     
     <select id="getSoldSeatsByFieldId" parameterType="java.lang.Integer" resultType="java.lang.String">
         SELECT GROUP_CONCAT(seats_ids)
-        FROM order_t WHERE field_id = ${fieldId}
+        FROM order_t WHERE field_id = #{fieldId}
     </select>
 </mapper>
