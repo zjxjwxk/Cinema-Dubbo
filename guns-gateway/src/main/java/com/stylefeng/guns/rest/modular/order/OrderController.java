@@ -4,6 +4,7 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.api.order.OrderServiceApi;
 import com.stylefeng.guns.api.order.vo.OrderVO;
+import com.stylefeng.guns.core.util.TokenBucket;
 import com.stylefeng.guns.rest.common.CurrentUser;
 import com.stylefeng.guns.rest.modular.vo.ResponseVO;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author zjxjwxk
@@ -20,34 +24,46 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/order/")
 public class OrderController {
 
-    @Reference(interfaceClass = OrderServiceApi.class, check = false)
-    private OrderServiceApi orderServiceApi;
+    /**
+     * 令牌桶（限流算法）
+     */
+    private static TokenBucket tokenBucket = new TokenBucket();
+
+    @Reference(interfaceClass = OrderServiceApi.class, check = false, group = "order2018")
+    private OrderServiceApi order2018ServiceApi;
+
+    @Reference(interfaceClass = OrderServiceApi.class, check = false, group = "order2017")
+    private OrderServiceApi order2017ServiceApi;
 
     @RequestMapping(value = "buyTickets", method = RequestMethod.POST)
     public ResponseVO buyTickets(Integer fieldId, String soldSeats, String seatsName) {
         try {
-            // 获取当前用户的信息
-            String userId = CurrentUser.getCurrentUser();
-            if (userId == null || userId.trim().length() == 0) {
-                return ResponseVO.serviceFail("用户未登录");
-            }
-            // 验证所购买的票是否为真
-            boolean isTrue = orderServiceApi.isTrueSeats(fieldId, soldSeats);
-            // 检查所购买的票是否已售出
-            boolean isSold = orderServiceApi.isSoldSeats(fieldId, soldSeats);
+            if (tokenBucket.getToken()) {
+                // 获取当前用户的信息
+                String userId = CurrentUser.getCurrentUser();
+                if (userId == null || userId.trim().length() == 0) {
+                    return ResponseVO.serviceFail("用户未登录");
+                }
+                // 验证所购买的票是否为真
+                boolean isTrue = order2018ServiceApi.isTrueSeats(fieldId, soldSeats);
+                // 检查所购买的票是否已售出
+                boolean isSold = order2018ServiceApi.isSoldSeats(fieldId, soldSeats);
 
-            // 验证上面两个条件，当所购买的票为真，且未售出时，才创建订单
-            if (isTrue && !isSold) {
-                // 创建订单信息
-                OrderVO orderVO = orderServiceApi.saveOrderInfo(fieldId, soldSeats, seatsName, Integer.parseInt(userId));
-                if (orderVO == null) {
-                    log.error("购票未成功");
-                    return ResponseVO.serviceFail("购票未成功");
+                // 验证上面两个条件，当所购买的票为真，且未售出时，才创建订单
+                if (isTrue && !isSold) {
+                    // 创建订单信息
+                    OrderVO orderVO = order2018ServiceApi.saveOrderInfo(fieldId, soldSeats, seatsName, Integer.parseInt(userId));
+                    if (orderVO == null) {
+                        log.error("购票未成功");
+                        return ResponseVO.serviceFail("购票未成功");
+                    } else {
+                        return ResponseVO.success(orderVO);
+                    }
                 } else {
-                    return ResponseVO.success(orderVO);
+                    return ResponseVO.serviceFail("订单中的座位编号不存在或已售出");
                 }
             } else {
-                return ResponseVO.serviceFail("订单中的座位编号不存在或已售出");
+                return ResponseVO.serviceFail("购票人数过多");
             }
         } catch (Exception e) {
             log.error("购票业务异常", e);
@@ -65,7 +81,15 @@ public class OrderController {
         }
         // 获取当前用户的订单
         Page<OrderVO> page = new Page<>(nowPage, pageSize);
-        Page<OrderVO> orderVOPage = orderServiceApi.getOrderVOListByUserId(Integer.parseInt(userId), page);
-        return ResponseVO.success(nowPage, (int) orderVOPage.getPages(), "", orderVOPage.getRecords());
+        Page<OrderVO> order2018VOPage = order2018ServiceApi.getOrderVOListByUserId(Integer.parseInt(userId), page);
+        Page<OrderVO> order2017VOPage = order2017ServiceApi.getOrderVOListByUserId(Integer.parseInt(userId), page);
+
+        // 分组聚合
+        int totalPages = (int) (order2018VOPage.getPages() + order2017VOPage.getPages());
+        List<OrderVO> orderVOList = new ArrayList<>();
+        orderVOList.addAll(order2018VOPage.getRecords());
+        orderVOList.addAll(order2017VOPage.getRecords());
+
+        return ResponseVO.success(nowPage, totalPages, "", orderVOList);
     }
 }
