@@ -25,9 +25,25 @@ public interface OrderTMapper extends BaseMapper<OrderT> {
      */
     String getSeatsByFieldId(@Param("fieldId") Integer fieldId);
 
+    /**
+     * 根据订单编号获取订单VO
+     * @param orderId 订单编号
+     * @return 订单VO
+     */
     OrderVO getOrderVOById(@Param("orderId") String orderId);
 
+    /**
+     * 根据用户编号、分页信息，获取订单VO列表
+     * @param userId 用户编号
+     * @param page 分页信息
+     * @return 订单VO列表
+     */
     List<OrderVO> getOrderVOListByUserId(@Param("userId") Integer userId, Page<OrderVO> page);
 
+    /**
+     * 根据放映场次编号，获取已售座位号
+     * @param fieldId 放映场次编号
+     * @return 已售座位号
+     */
     String getSoldSeatsByFieldId(@Param("fieldId") Integer fieldId);
 }
