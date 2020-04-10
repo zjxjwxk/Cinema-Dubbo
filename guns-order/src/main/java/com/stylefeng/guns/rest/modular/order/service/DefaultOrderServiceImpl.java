@@ -71,7 +71,7 @@ public class DefaultOrderServiceImpl implements OrderServiceApi {
         String[] seatArr = seats.split(",");
         // 遍历该放映场次的所有订单，如果存在某一订单的座位包含seats中的座位，则表示已售出
         for (OrderT orderT : orderTList) {
-            String[] ids = orderT.getSeatsName().split(",");
+            String[] ids = orderT.getSeatsIds().split(",");
             for (String seat : seatArr) {
                 for (String id : ids) {
                     if (seat.equalsIgnoreCase(id)) {
