@@ -123,4 +123,16 @@ public class OrderController {
 
         return ResponseVO.success(nowPage, totalPages, "", orderVOList);
     }
+
+    @RequestMapping(value = "getPayInfo", method = RequestMethod.POST)
+    public ResponseVO getPayInfo(@RequestParam("orderId") String orderId) {
+
+        return null;
+    }
+
+    @RequestMapping(value = "getPayResult", method = RequestMethod.POST)
+    public ResponseVO getPayResult(@RequestParam("orderId") String orderId, @RequestParam("tryNums") Integer tryNums) {
+
+        return null;
+    }
 }
