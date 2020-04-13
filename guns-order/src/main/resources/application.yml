@@ -34,7 +34,7 @@ mybatis-plus:
 
 spring:
   application:
-    name: cinema-film
+    name: cinema-order
   dubbo:
     server: true
     registry: zookeeper://localhost:2181
