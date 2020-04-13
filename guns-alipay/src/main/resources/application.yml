@@ -16,7 +16,7 @@ ftp:
   password: 19981018
 
 server:
-  port: 8086 #项目端口
+  port: 8087 #项目端口
 
 mybatis-plus:
   mapper-locations: classpath*:com/stylefeng/guns/rest/**/mapping/*.xml
@@ -34,13 +34,13 @@ mybatis-plus:
 
 spring:
   application:
-    name: cinema-film
+    name: cinema-alipay
   dubbo:
     server: true
     registry: zookeeper://localhost:2181
     protocol:
       name: dubbo
-      port: 20884
+      port: 20885
   datasource:
       url: jdbc:mysql://127.0.0.1:3306/guns_rest?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
       username: root
