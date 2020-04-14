@@ -2,7 +2,7 @@ package com.stylefeng.guns.rest.common.persistence.dao;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.api.order.vo.OrderVO;
-import com.stylefeng.guns.rest.common.persistence.model.Order2017T;
+import com.stylefeng.guns.rest.common.persistence.model.Order2020T;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -10,13 +10,13 @@ import java.util.List;
 
 /**
  * <p>
- * 订单信息表 Mapper 接口
+ * 2020订单信息表 Mapper 接口
  * </p>
  *
  * @author zjxjwxk
  * @since 2020-04-09
  */
-public interface Order2017TMapper extends BaseMapper<Order2017T> {
+public interface Order2020TMapper extends BaseMapper<Order2020T> {
 
     /**
      * 根据放映场次编号获取该场次的座位位置图的文件地址

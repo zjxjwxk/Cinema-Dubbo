@@ -9,14 +9,14 @@ import java.io.Serializable;
 
 /**
  * <p>
- * 订单信息表
+ * 2019订单信息表
  * </p>
  *
  * @author zjxjwxk
  * @since 2020-04-09
  */
-@TableName("order_2017_t")
-public class Order2017T extends Model<Order2017T> {
+@TableName("order_2019_t")
+public class Order2019T extends Model<Order2019T> {
 
     private static final long serialVersionUID = 1L;
 
@@ -172,7 +172,7 @@ public class Order2017T extends Model<Order2017T> {
 
     @Override
     public String toString() {
-        return "Order2017T{" +
+        return "Order2019T{" +
         "uuid=" + uuid +
         ", cinemaId=" + cinemaId +
         ", fieldId=" + fieldId +

@@ -30,7 +30,7 @@ public class CinemaController {
     @Reference(interfaceClass = CinemaServiceApi.class, cache = "lru", check = false)
     private CinemaServiceApi cinemaServiceApi;
 
-    @Reference(interfaceClass = OrderServiceApi.class, check = false)
+    @Reference(interfaceClass = OrderServiceApi.class, check = false, group = "order2020")
     private OrderServiceApi orderServiceApi;
 
     @RequestMapping(value = "getCinemas")

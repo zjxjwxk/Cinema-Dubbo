@@ -37,10 +37,10 @@ public class OrderController {
     private static final String IMG_PRE = "img.zjxjwxk.com/";
 
     @Reference(interfaceClass = OrderServiceApi.class, check = false, group = "order2018")
-    private OrderServiceApi order2018ServiceApi;
+    private OrderServiceApi order2019ServiceApi;
 
     @Reference(interfaceClass = OrderServiceApi.class, check = false, group = "order2017")
-    private OrderServiceApi order2017ServiceApi;
+    private OrderServiceApi order2020ServiceApi;
 
     @Reference(interfaceClass = AlipayServiceApi.class, check = false)
     private AlipayServiceApi alipayServiceApi;
@@ -84,14 +84,14 @@ public class OrderController {
                     return ResponseVO.serviceFail("用户未登录");
                 }
                 // 验证所购买的票是否为真
-                boolean isTrue = order2018ServiceApi.isTrueSeats(fieldId, soldSeats);
+                boolean isTrue = order2019ServiceApi.isTrueSeats(fieldId, soldSeats);
                 // 检查所购买的票是否已售出
-                boolean isSold = order2018ServiceApi.isSoldSeats(fieldId, soldSeats);
+                boolean isSold = order2019ServiceApi.isSoldSeats(fieldId, soldSeats);
 
                 // 验证上面两个条件，当所购买的票为真，且未售出时，才创建订单
                 if (isTrue && !isSold) {
                     // 创建订单信息
-                    OrderVO orderVO = order2018ServiceApi.saveOrderInfo(fieldId, soldSeats, seatsName, Integer.parseInt(userId));
+                    OrderVO orderVO = order2019ServiceApi.saveOrderInfo(fieldId, soldSeats, seatsName, Integer.parseInt(userId));
                     if (orderVO == null) {
                         log.error("购票未成功");
                         return ResponseVO.serviceFail("购票未成功");
@@ -120,8 +120,8 @@ public class OrderController {
         }
         // 获取当前用户的订单
         Page<OrderVO> page = new Page<>(nowPage, pageSize);
-        Page<OrderVO> order2018VOPage = order2018ServiceApi.getOrderVOListByUserId(Integer.parseInt(userId), page);
-        Page<OrderVO> order2017VOPage = order2017ServiceApi.getOrderVOListByUserId(Integer.parseInt(userId), page);
+        Page<OrderVO> order2018VOPage = order2019ServiceApi.getOrderVOListByUserId(Integer.parseInt(userId), page);
+        Page<OrderVO> order2017VOPage = order2020ServiceApi.getOrderVOListByUserId(Integer.parseInt(userId), page);
 
         // 分组聚合
         int totalPages = (int) (order2018VOPage.getPages() + order2017VOPage.getPages());

@@ -10,8 +10,8 @@ import com.stylefeng.guns.api.cinema.vo.OrderQueryVO;
 import com.stylefeng.guns.api.order.OrderServiceApi;
 import com.stylefeng.guns.api.order.vo.OrderVO;
 import com.stylefeng.guns.core.util.UUIDUtil;
-import com.stylefeng.guns.rest.common.persistence.dao.Order2018TMapper;
-import com.stylefeng.guns.rest.common.persistence.model.Order2018T;
+import com.stylefeng.guns.rest.common.persistence.dao.Order2020TMapper;
+import com.stylefeng.guns.rest.common.persistence.model.Order2020T;
 import com.stylefeng.guns.rest.common.util.FTPUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +28,10 @@ import java.util.List;
 @Slf4j
 @Component
 @Service(interfaceClass = OrderServiceApi.class, group = "order2018")
-public class DefaultOrder2018ServiceImpl implements OrderServiceApi {
+public class DefaultOrder2020ServiceImpl implements OrderServiceApi {
 
     @Autowired
-    private Order2018TMapper order2018TMapper;
+    private Order2020TMapper order2020TMapper;
 
     @Reference(interfaceClass = CinemaServiceApi.class, check = false)
     private CinemaServiceApi cinemaServiceApi;
@@ -42,7 +42,7 @@ public class DefaultOrder2018ServiceImpl implements OrderServiceApi {
     @Override
     public boolean isTrueSeats(Integer fieldId, String seats) {
         // 根据fieldId找到对应的座位位置图路径
-        String seatAddress = order2018TMapper.getSeatsByFieldId(fieldId);
+        String seatAddress = order2020TMapper.getSeatsByFieldId(fieldId);
         // 根据路径读取位置图，以判断seats是否为真
         String fileStr = ftpUtil.getFileStrByAddress(seatAddress);
 
@@ -67,11 +67,11 @@ public class DefaultOrder2018ServiceImpl implements OrderServiceApi {
     public boolean isSoldSeats(Integer fieldId, String seats) {
         EntityWrapper entityWrapper = new EntityWrapper();
         entityWrapper.eq("field_id", fieldId);
-        List<Order2018T> order2018TListTList = order2018TMapper.selectList(entityWrapper);
+        List<Order2020T> order2020TListTList = order2020TMapper.selectList(entityWrapper);
         String[] seatArr = seats.split(",");
         // 遍历该放映场次的所有订单，如果存在某一订单的座位包含seats中的座位，则表示已售出
-        for (Order2018T order2018T : order2018TListTList) {
-            String[] ids = order2018T.getSeatsIds().split(",");
+        for (Order2020T order2020T : order2020TListTList) {
+            String[] ids = order2020T.getSeatsIds().split(",");
             for (String seat : seatArr) {
                 for (String id : ids) {
                     if (seat.equalsIgnoreCase(id)) {
@@ -97,19 +97,19 @@ public class DefaultOrder2018ServiceImpl implements OrderServiceApi {
         int seatsCnt = soldSeats.split(",").length;
         Double orderPrice = getOrderPrice(seatsCnt, filmPrice);
 
-        Order2018T order2018T = new Order2018T();
-        order2018T.setUuid(uuid);
-        order2018T.setCinemaId(cinemaId);
-        order2018T.setFieldId(fieldId);
-        order2018T.setFilmId(filmId);
-        order2018T.setFilmPrice(filmPrice);
-        order2018T.setSeatsIds(soldSeats);
-        order2018T.setSeatsName(seatsName);
-        order2018T.setOrderPrice(orderPrice);
-        order2018T.setOrderUser(userId);
-        Integer insert = order2018TMapper.insert(order2018T);
+        Order2020T order2020T = new Order2020T();
+        order2020T.setUuid(uuid);
+        order2020T.setCinemaId(cinemaId);
+        order2020T.setFieldId(fieldId);
+        order2020T.setFilmId(filmId);
+        order2020T.setFilmPrice(filmPrice);
+        order2020T.setSeatsIds(soldSeats);
+        order2020T.setSeatsName(seatsName);
+        order2020T.setOrderPrice(orderPrice);
+        order2020T.setOrderUser(userId);
+        Integer insert = order2020TMapper.insert(order2020T);
         if (insert > 0) {
-            OrderVO orderVO = order2018TMapper.getOrderVOById(uuid);
+            OrderVO orderVO = order2020TMapper.getOrderVOById(uuid);
             if (orderVO == null || orderVO.getOrderId() == null) {
                 log.error("订单信息查询失败，订单编号为:{}", uuid);
                 return null;
@@ -129,16 +129,16 @@ public class DefaultOrder2018ServiceImpl implements OrderServiceApi {
             log.error("用户订单查询失败，用户编号未传入");
             return null;
         } else {
-            List<OrderVO> orderVOList = order2018TMapper.getOrderVOListByUserId(userId, page);
+            List<OrderVO> orderVOList = order2020TMapper.getOrderVOListByUserId(userId, page);
             if (orderVOList == null || orderVOList.size() == 0) {
                 result.setTotal(0);
                 result.setRecords(new ArrayList<>());
                 return result;
             } else {
                 // 获取订单总数
-                EntityWrapper<Order2018T> entityWrapper = new EntityWrapper<>();
+                EntityWrapper<Order2020T> entityWrapper = new EntityWrapper<>();
                 entityWrapper.eq("order_user", userId);
-                Integer count = order2018TMapper.selectCount(entityWrapper);
+                Integer count = order2020TMapper.selectCount(entityWrapper);
                 // 将结果放入Page
                 result.setTotal(count);
                 result.setRecords(orderVOList);
@@ -153,30 +153,30 @@ public class DefaultOrder2018ServiceImpl implements OrderServiceApi {
             log.error("获取已售座位失败，放映场次编号未传入");
             return "";
         } else {
-            return order2018TMapper.getSoldSeatsByFieldId(fieldId);
+            return order2020TMapper.getSoldSeatsByFieldId(fieldId);
         }
     }
 
     @Override
     public OrderVO getOrderInfoById(String orderId) {
-        return order2018TMapper.getOrderVOById(orderId);
+        return order2020TMapper.getOrderVOById(orderId);
     }
 
     @Override
     public boolean paySuccess(String orderId) {
-        Order2018T order2018T = new Order2018T();
-        order2018T.setUuid(orderId);
-        order2018T.setOrderStatus(1);
-        Integer result = order2018TMapper.updateById(order2018T);
+        Order2020T order2020T = new Order2020T();
+        order2020T.setUuid(orderId);
+        order2020T.setOrderStatus(1);
+        Integer result = order2020TMapper.updateById(order2020T);
         return result > 0;
     }
 
     @Override
     public boolean payFail(String orderId) {
-        Order2018T order2018T = new Order2018T();
-        order2018T.setUuid(orderId);
-        order2018T.setOrderStatus(2);
-        Integer result = order2018TMapper.updateById(order2018T);
+        Order2020T order2020T = new Order2020T();
+        order2020T.setUuid(orderId);
+        order2020T.setOrderStatus(2);
+        Integer result = order2020TMapper.updateById(order2020T);
         return result > 0;
     }
 
