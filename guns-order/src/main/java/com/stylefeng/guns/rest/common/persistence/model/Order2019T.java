@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
+
 import java.io.Serializable;
 
 /**
@@ -23,7 +25,7 @@ public class Order2019T extends Model<Order2019T> {
     /**
      * 主键编号
      */
-    @TableId("UUID")
+    @TableId(value = "UUID", type = IdType.INPUT)
     private String uuid;
     /**
      * 影院编号
