@@ -36,10 +36,10 @@ public class OrderController {
     private static TokenBucket tokenBucket = new TokenBucket();
     private static final String IMG_PRE = "img.zjxjwxk.com/";
 
-    @Reference(interfaceClass = OrderServiceApi.class, check = false, group = "order2018")
+    @Reference(interfaceClass = OrderServiceApi.class, check = false, group = "order2020")
     private OrderServiceApi order2019ServiceApi;
 
-    @Reference(interfaceClass = OrderServiceApi.class, check = false, group = "order2017")
+    @Reference(interfaceClass = OrderServiceApi.class, check = false, group = "order2019")
     private OrderServiceApi order2020ServiceApi;
 
     @Reference(interfaceClass = AlipayServiceApi.class, check = false)
@@ -120,14 +120,14 @@ public class OrderController {
         }
         // 获取当前用户的订单
         Page<OrderVO> page = new Page<>(nowPage, pageSize);
-        Page<OrderVO> order2018VOPage = order2019ServiceApi.getOrderVOListByUserId(Integer.parseInt(userId), page);
-        Page<OrderVO> order2017VOPage = order2020ServiceApi.getOrderVOListByUserId(Integer.parseInt(userId), page);
+        Page<OrderVO> order2020VOPage = order2019ServiceApi.getOrderVOListByUserId(Integer.parseInt(userId), page);
+        Page<OrderVO> order2019VOPage = order2020ServiceApi.getOrderVOListByUserId(Integer.parseInt(userId), page);
 
         // 分组聚合
-        int totalPages = (int) (order2018VOPage.getPages() + order2017VOPage.getPages());
+        int totalPages = (int) (order2020VOPage.getPages() + order2019VOPage.getPages());
         List<OrderVO> orderVOList = new ArrayList<>();
-        orderVOList.addAll(order2018VOPage.getRecords());
-        orderVOList.addAll(order2017VOPage.getRecords());
+        orderVOList.addAll(order2020VOPage.getRecords());
+        orderVOList.addAll(order2019VOPage.getRecords());
 
         return ResponseVO.success(nowPage, totalPages, "", orderVOList);
     }

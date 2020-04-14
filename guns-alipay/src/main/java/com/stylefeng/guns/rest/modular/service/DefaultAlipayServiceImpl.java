@@ -35,7 +35,7 @@ import java.util.List;
 @Service(interfaceClass = AlipayServiceApi.class)
 public class DefaultAlipayServiceImpl implements AlipayServiceApi {
 
-    @Reference(interfaceClass = OrderServiceApi.class, check = false, group = "order2018")
+    @Reference(interfaceClass = OrderServiceApi.class, check = false, group = "order2020")
     private OrderServiceApi orderServiceApi;
 
     /**
