@@ -14,6 +14,7 @@ ftp:
   port: 21
   user-name: ftpuser
   password: 19981018
+  upload-path: qrcode
 
 server:
   port: 8087 #项目端口
