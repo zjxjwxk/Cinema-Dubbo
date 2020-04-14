@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.File;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AlipayApplication.class)
 public class GunsRestApplicationTests {
@@ -17,8 +19,9 @@ public class GunsRestApplicationTests {
 
 	@Test
 	public void contextLoads() {
-		String fileStr = ftpUtil.getFileStrByAddress("seats/test.json");
-		System.out.println(fileStr);
+		File file = new File("/Users/zjxjwxk/Desktop/qr-124583135asdf81.png");
+		boolean ifSuccess = ftpUtil.uploadFile("qr-124583135asdf81.png", file);
+		System.out.println(ifSuccess);
 	}
 
 }
