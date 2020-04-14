@@ -6,9 +6,7 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 
 /**
  * @author zjxjwxk
@@ -23,6 +21,7 @@ public class FTPUtil {
     private Integer port;
     private String userName;
     private String password;
+    private String uploadPath;
 
     private FTPClient ftpClient = null;
 
@@ -71,5 +70,40 @@ public class FTPUtil {
             }
         }
         return null;
+    }
+
+    /**
+     * 文件上传
+     * @param fileName 文件名
+     * @param file 文件File
+     * @return 是否上传成功
+     */
+    public boolean uploadFile(String fileName, File file) {
+        FileInputStream fileInputStream = null;
+        try {
+            initFTPClient();
+            fileInputStream = new FileInputStream(file);
+
+            // FTP相关
+            ftpClient.setControlEncoding("utf-8");
+            ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);
+            ftpClient.enterLocalPassiveMode();
+
+            // 修改ftpClient的工作目录
+            ftpClient.changeWorkingDirectory(this.getUploadPath());
+            // 上传文件
+            ftpClient.storeFile(fileName, fileInputStream);
+            return true;
+        } catch (Exception e) {
+            log.error("上传文件失败", e);
+            return false;
+        } finally {
+            try {
+                fileInputStream.close();
+                ftpClient.logout();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
