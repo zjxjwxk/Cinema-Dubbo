@@ -8,6 +8,7 @@ import com.stylefeng.guns.api.alipay.vo.AlipayInfoVO;
 import com.stylefeng.guns.api.alipay.vo.AlipayResultVO;
 import com.stylefeng.guns.api.order.OrderServiceApi;
 import com.stylefeng.guns.api.order.vo.OrderVO;
+import com.stylefeng.guns.rest.common.util.FTPUtil;
 import com.stylefeng.guns.rest.modular.alipay.config.Configs;
 import com.stylefeng.guns.rest.modular.alipay.model.ExtendParams;
 import com.stylefeng.guns.rest.modular.alipay.model.GoodsDetail;
@@ -22,8 +23,10 @@ import com.stylefeng.guns.rest.modular.alipay.service.impl.AlipayTradeServiceImp
 import com.stylefeng.guns.rest.modular.alipay.service.impl.AlipayTradeWithHBServiceImpl;
 import com.stylefeng.guns.rest.modular.alipay.utils.ZxingUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +40,9 @@ public class DefaultAlipayServiceImpl implements AlipayServiceApi {
 
     @Reference(interfaceClass = OrderServiceApi.class, check = false, group = "order2020")
     private OrderServiceApi orderServiceApi;
+
+    @Autowired
+    private FTPUtil ftpUtil;
 
     /**
      * 支付宝当面付2.0服务
@@ -172,8 +178,16 @@ public class DefaultAlipayServiceImpl implements AlipayServiceApi {
                 // 需要修改为运行机器上的路径
                 filePath = String.format("/Users/zjxjwxk/Desktop/qr-%s.png",
                         response.getOutTradeNo());
+                String fileName = String.format("qr-%s.png", response.getOutTradeNo());
                 log.info("filePath:" + filePath);
-                ZxingUtils.getQRCodeImge(response.getQrCode(), 256, filePath);
+                File qrCodeImge = ZxingUtils.getQRCodeImge(response.getQrCode(), 256, filePath);
+
+                // FTP文件上传
+                boolean ifSuccess = ftpUtil.uploadFile(fileName, qrCodeImge);
+                if (!ifSuccess) {
+                    filePath = "";
+                    log.error("二维码上传失败");
+                }
                 break;
 
             case FAILED:
