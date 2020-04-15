@@ -2,6 +2,7 @@ package com.stylefeng.guns.rest.modular.service;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.dubbo.config.annotation.Service;
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.alipay.api.response.AlipayTradePrecreateResponse;
 import com.stylefeng.guns.api.alipay.AlipayServiceApi;
 import com.stylefeng.guns.api.alipay.vo.AlipayInfoVO;
@@ -35,7 +36,7 @@ import java.util.List;
  */
 @Slf4j
 @Component
-@Service(interfaceClass = AlipayServiceApi.class)
+@Service(interfaceClass = AlipayServiceApi.class, mock = "com.stylefeng.guns.api.alipay.AlipayServiceMock")
 public class DefaultAlipayServiceImpl implements AlipayServiceApi {
 
     @Reference(interfaceClass = OrderServiceApi.class, check = false, group = "order2020")
@@ -81,6 +82,10 @@ public class DefaultAlipayServiceImpl implements AlipayServiceApi {
 
     @Override
     public AlipayInfoVO getQRCode(String orderId) {
+        // 通过远程参数验证用户
+        if (checkUserId(orderId)) {
+            return null;
+        }
         // 获取二维码地址
         String filePath = tradePrecreate(orderId);
         // 如果地址为空，则表示获取二维码不成功
@@ -96,6 +101,10 @@ public class DefaultAlipayServiceImpl implements AlipayServiceApi {
 
     @Override
     public AlipayResultVO getOrderStatus(String orderId) {
+        // 通过远程参数验证用户
+        if (checkUserId(orderId)) {
+            return null;
+        }
         boolean ifPaySuccess = tradeQuery(orderId);
         if (ifPaySuccess) {
             AlipayResultVO alipayResultVO = new AlipayResultVO();
@@ -238,5 +247,17 @@ public class DefaultAlipayServiceImpl implements AlipayServiceApi {
                 break;
         }
         return ifPaySuccess;
+    }
+
+    /**
+     * 通过隐式参数检查当前处理订单的用户是否为当前登录用户
+     * @param orderId 订单编号
+     * @return 用户验证是否成功
+     */
+    private boolean checkUserId(String orderId) {
+        // 获取隐式参数用户编号userId
+        String userId = RpcContext.getContext().getAttachment("userId");
+        Integer orderUser = orderServiceApi.getUserIdById(orderId);
+        return orderUser == null || Integer.parseInt(userId) != orderUser;
     }
 }

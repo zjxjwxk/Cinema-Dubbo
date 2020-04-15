@@ -1,6 +1,7 @@
 package com.stylefeng.guns.rest.modular.order;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
@@ -139,6 +140,10 @@ public class OrderController {
         if (userId == null || userId.trim().length() == 0) {
             return ResponseVO.serviceFail("用户未登录");
         }
+
+        // 设置隐式参数（将当前登录用户的编号userId传递给后端）
+        RpcContext.getContext().setAttachment("userId", userId);
+
         // 获取订单二维码
         AlipayInfoVO alipayInfoVO = alipayServiceApi.getQRCode(orderId);
         if (alipayInfoVO == null) {
@@ -156,6 +161,10 @@ public class OrderController {
         if (userId == null || userId.trim().length() == 0) {
             return ResponseVO.serviceFail("用户未登录");
         }
+
+        // 设置隐式参数（将当前登录用户的编号userId传递给后端）
+        RpcContext.getContext().setAttachment("userId", userId);
+
         // 判断是否支付超时
         if (tryNums > 3) {
             return ResponseVO.serviceFail("订单支付失败，请稍后重试");
