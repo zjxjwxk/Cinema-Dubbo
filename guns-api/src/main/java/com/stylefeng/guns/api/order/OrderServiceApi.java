@@ -69,4 +69,6 @@ public interface OrderServiceApi {
      * @return 是否支付失败
      */
     boolean payFail(String orderId);
+
+    Integer getUserIdById(String orderId);
 }
