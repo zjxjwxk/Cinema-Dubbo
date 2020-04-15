@@ -47,4 +47,10 @@ public interface Order2020TMapper extends BaseMapper<Order2020T> {
      */
     String getSoldSeatsByFieldId(@Param("fieldId") Integer fieldId);
 
+    /**
+     * 根据订单编号获取用户编号
+     * @param orderId 订单编号
+     * @return 用户编号
+     */
+    Integer getUserIdById(@Param("orderId") String orderId);
 }

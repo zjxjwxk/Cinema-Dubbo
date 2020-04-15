@@ -59,4 +59,9 @@
         SELECT GROUP_CONCAT(seats_ids)
         FROM order_t WHERE field_id = #{fieldId}
     </select>
+
+    <select id="getUserIdById" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT order_user AS userId
+        FROM order_t WHERE UUID = #{orderId}
+    </select>
 </mapper>

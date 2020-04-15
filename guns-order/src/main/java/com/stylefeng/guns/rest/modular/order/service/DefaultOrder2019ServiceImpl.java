@@ -180,6 +180,11 @@ public class DefaultOrder2019ServiceImpl implements OrderServiceApi {
         return result > 0;
     }
 
+    @Override
+    public Integer getUserIdById(String orderId) {
+        return order2019TMapper.getUserIdById(orderId);
+    }
+
     private Double getOrderPrice(int seatsCnt, double filmPrice) {
         BigDecimal seatsCntDecimal = new BigDecimal(seatsCnt);
         BigDecimal filmPriceDecimal = new BigDecimal(filmPrice);

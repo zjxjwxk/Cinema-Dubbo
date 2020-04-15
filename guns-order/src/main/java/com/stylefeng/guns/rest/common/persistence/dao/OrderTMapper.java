@@ -46,4 +46,11 @@ public interface OrderTMapper extends BaseMapper<OrderT> {
      * @return 已售座位号
      */
     String getSoldSeatsByFieldId(@Param("fieldId") Integer fieldId);
+
+    /**
+     * 根据订单编号获取用户编号
+     * @param orderId 订单编号
+     * @return 用户编号
+     */
+    Integer getUserIdById(@Param("orderId") String orderId);
 }
