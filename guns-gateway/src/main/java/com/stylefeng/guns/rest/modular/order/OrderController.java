@@ -31,20 +31,20 @@ import java.util.List;
 @RequestMapping("/order/")
 public class OrderController {
 
+    @Reference(interfaceClass = OrderServiceApi.class, check = false, group = "order2020")
+    private OrderServiceApi order2020ServiceApi;
+
+    @Reference(interfaceClass = OrderServiceApi.class, check = false, group = "order2019")
+    private OrderServiceApi order2019ServiceApi;
+
+    @Reference(interfaceClass = AlipayServiceApi.class, check = false)
+    private AlipayServiceApi alipayServiceApi;
+
     /**
      * 令牌桶（限流算法）
      */
     private static TokenBucket tokenBucket = new TokenBucket();
     private static final String IMG_PRE = "img.zjxjwxk.com/";
-
-    @Reference(interfaceClass = OrderServiceApi.class, check = false, group = "order2020")
-    private OrderServiceApi order2019ServiceApi;
-
-    @Reference(interfaceClass = OrderServiceApi.class, check = false, group = "order2019")
-    private OrderServiceApi order2020ServiceApi;
-
-    @Reference(interfaceClass = AlipayServiceApi.class, check = false)
-    private AlipayServiceApi alipayServiceApi;
 
     /**
      * 服务降级
@@ -85,14 +85,14 @@ public class OrderController {
                     return ResponseVO.serviceFail("用户未登录");
                 }
                 // 验证所购买的票是否为真
-                boolean isTrue = order2019ServiceApi.isTrueSeats(fieldId, soldSeats);
+                boolean isTrue = order2020ServiceApi.isTrueSeats(fieldId, soldSeats);
                 // 检查所购买的票是否已售出
-                boolean isSold = order2019ServiceApi.isSoldSeats(fieldId, soldSeats);
+                boolean isSold = order2020ServiceApi.isSoldSeats(fieldId, soldSeats);
 
                 // 验证上面两个条件，当所购买的票为真，且未售出时，才创建订单
                 if (isTrue && !isSold) {
                     // 创建订单信息
-                    OrderVO orderVO = order2019ServiceApi.saveOrderInfo(fieldId, soldSeats, seatsName, Integer.parseInt(userId));
+                    OrderVO orderVO = order2020ServiceApi.saveOrderInfo(fieldId, soldSeats, seatsName, Integer.parseInt(userId));
                     if (orderVO == null) {
                         log.error("购票未成功");
                         return ResponseVO.serviceFail("购票未成功");
@@ -121,8 +121,8 @@ public class OrderController {
         }
         // 获取当前用户的订单
         Page<OrderVO> page = new Page<>(nowPage, pageSize);
-        Page<OrderVO> order2020VOPage = order2019ServiceApi.getOrderVOListByUserId(Integer.parseInt(userId), page);
-        Page<OrderVO> order2019VOPage = order2020ServiceApi.getOrderVOListByUserId(Integer.parseInt(userId), page);
+        Page<OrderVO> order2020VOPage = order2020ServiceApi.getOrderVOListByUserId(Integer.parseInt(userId), page);
+        Page<OrderVO> order2019VOPage = order2019ServiceApi.getOrderVOListByUserId(Integer.parseInt(userId), page);
 
         // 分组聚合
         int totalPages = (int) (order2020VOPage.getPages() + order2019VOPage.getPages());

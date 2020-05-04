@@ -32,12 +32,17 @@ spring:
   dubbo:
     server: true
     registry: zookeeper://localhost:2181
+    provider:
+      filter: tracing
+    consumer:
+      filter: tracing
     protocol:
       name: dubbo
       port: 20881
   datasource:
-      url: jdbc:mysql://127.0.0.1:3306/guns_rest?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
+      url: jdbc:mysql://127.0.0.1:3306/cinema?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
       username: root
+#      password: Zjxjwxk19981018_
       password: 19981018
       filters: log4j,wall,mergeStat
 

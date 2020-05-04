@@ -31,6 +31,8 @@ public class FTPUtil {
             ftpClient.setControlEncoding("utf-8");
             ftpClient.connect(hostName, port);
             ftpClient.login(userName, password);
+            ftpClient.setDataTimeout(60000);
+            ftpClient.setConnectTimeout(60000);
         } catch (Exception e) {
             log.error("初始化FTP失败", e);
         }
@@ -78,15 +80,13 @@ public class FTPUtil {
      * @param file 文件File
      * @return 是否上传成功
      */
-    public boolean uploadFile(String fileName, File file) {
+    public boolean  uploadFile(String fileName, File file) {
         FileInputStream fileInputStream = null;
         try {
             initFTPClient();
             fileInputStream = new FileInputStream(file);
 
             // FTP相关
-            ftpClient.setControlEncoding("utf-8");
-            ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);
             ftpClient.enterLocalPassiveMode();
 
             // 修改ftpClient的工作目录

@@ -30,11 +30,11 @@ import java.util.List;
 @Service(interfaceClass = OrderServiceApi.class, group = "order2019")
 public class DefaultOrder2019ServiceImpl implements OrderServiceApi {
 
-    @Autowired
-    private Order2019TMapper order2019TMapper;
-
     @Reference(interfaceClass = CinemaServiceApi.class, check = false)
     private CinemaServiceApi cinemaServiceApi;
+
+    @Autowired
+    private Order2019TMapper order2019TMapper;
 
     @Autowired
     private FTPUtil ftpUtil;
