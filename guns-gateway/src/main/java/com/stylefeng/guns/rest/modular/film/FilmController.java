@@ -21,6 +21,7 @@ import java.util.concurrent.Future;
  * @author zjxjwxk
  */
 @RestController
+@CrossOrigin
 @RequestMapping("/film/")
 public class FilmController {
 
