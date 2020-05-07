@@ -11,7 +11,7 @@ jwt:
   ignore-url: /user/register,/user/check,/film/,/cinema/ #忽略列表
 
 server:
-  port: 8081 #项目端口
+  port: 8080 #项目端口
 
 mybatis-plus:
   mapper-locations: classpath*:com/stylefeng/guns/rest/**/mapping/*.xml
@@ -42,8 +42,8 @@ spring:
   datasource:
       url: jdbc:mysql://127.0.0.1:3306/cinema?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
       username: root
-#      password: Zjxjwxk19981018_
-      password: 19981018
+      password: Zjxjwxk19981018_
+#      password: 19981018
       filters: log4j,wall,mergeStat
 
 logging:
