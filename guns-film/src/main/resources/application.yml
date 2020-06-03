@@ -39,7 +39,6 @@ spring:
       url: jdbc:mysql://127.0.0.1:3306/cinema?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
       username: root
       password: Zjxjwxk19981018_
-#      password: 19981018
       filters: log4j,wall,mergeStat
 
 logging:
