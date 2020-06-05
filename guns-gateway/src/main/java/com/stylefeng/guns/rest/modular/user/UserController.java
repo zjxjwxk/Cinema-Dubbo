@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author zjxjwxk
  */
 @RestController
-@CrossOrigin(origins = "http://localhost:8080", maxAge = 3600)
+@CrossOrigin
 @RequestMapping("/user/")
 public class UserController {
 
