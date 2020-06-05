@@ -1,0 +1,56 @@
+version: '3'
+
+services:
+  user:
+    image: cinema-user:latest
+    command:
+      - "--zk.address=10.137.253.39"
+      - "--mysql.address=10.137.253.39"
+    tty: true
+
+  film:
+    image: cinema-film:latest
+    command:
+      - "--mysql.address=10.137.253.39"
+      - "--zk.address=10.137.253.39"
+    tty: true
+
+  cinema:
+    image: cinema-cinema:latest
+    command:
+      - "--mysql.address=10.137.253.39"
+      - "--zk.address=10.137.253.39"
+    tty: true
+
+  order:
+    image: cinema-order:latest
+    command:
+      - "--mysql.address=10.137.253.39"
+      - "--zk.address=10.137.253.39"
+    links:
+      - cinema
+    tty: true
+
+  alipay:
+    image: cinema-alipay:latest
+    command:
+      - "--mysql.address=10.137.253.39"
+      - "--zk.address=10.137.253.39"
+    links:
+      - order
+    tty: true
+
+  gateway:
+    image: cinema-gateway:latest
+    command:
+      - "--mysql.address=10.137.253.39"
+      - "--zk.address=10.137.253.39"
+    links:
+      - user
+      - film
+      - cinema
+      - order
+      - alipay
+    ports:
+      - 8081:8081
+    tty: true
