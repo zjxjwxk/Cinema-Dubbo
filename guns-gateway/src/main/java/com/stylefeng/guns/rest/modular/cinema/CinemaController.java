@@ -48,7 +48,7 @@ public class CinemaController {
             } else {
                 CinemaListResponseVO cinemaListResponseVO = new CinemaListResponseVO();
                 cinemaListResponseVO.setCinemas(cinemas.getRecords());
-                return ResponseVO.success(cinemas.getCurrent(), (int) cinemas.getPages(), "", cinemaListResponseVO);
+                return ResponseVO.success(cinemas.getCurrent(), (int) cinemas.getPages(), "", cinemaListResponseVO.getCinemas());
             }
         } catch (Exception e) {
             // 异常处理

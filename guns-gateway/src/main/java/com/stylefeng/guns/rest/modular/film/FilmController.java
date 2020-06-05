@@ -189,7 +189,7 @@ public class FilmController {
                 break;
         }
 
-        return ResponseVO.success(filmVO.getNowPage(), filmVO.getTotalPage(), IMG_PRE, filmVO);
+        return ResponseVO.success(filmVO.getNowPage(), filmVO.getTotalPage(), IMG_PRE, filmVO.getFilmInfo());
     }
 
 
