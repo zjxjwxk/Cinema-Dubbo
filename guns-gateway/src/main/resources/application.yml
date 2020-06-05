@@ -11,7 +11,7 @@ jwt:
   ignore-url: /user/register,/user/check,/film/,/cinema/ #忽略列表
 
 server:
-  port: 8080 #项目端口
+  port: 8081 #项目端口
 
 mybatis-plus:
   mapper-locations: classpath*:com/stylefeng/guns/rest/**/mapping/*.xml
@@ -32,7 +32,7 @@ spring:
     name: cinema-gateway
   dubbo:
     server: true
-    registry: zookeeper://localhost:2181
+    registry: zookeeper://${zk.address}:2181
     provider:
       filter: tracing
     consumer:
@@ -40,7 +40,7 @@ spring:
       check: false
 
   datasource:
-      url: jdbc:mysql://127.0.0.1:3306/cinema?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
+      url: jdbc:mysql://${mysql.address}:3306/cinema?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
       username: root
       password: Zjxjwxk19981018_
       filters: log4j,wall,mergeStat
