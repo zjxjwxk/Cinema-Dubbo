@@ -27,7 +27,7 @@ import java.util.List;
  */
 @Slf4j
 @Component
-@Service(interfaceClass = OrderServiceApi.class, group = "order2019")
+@Service(interfaceClass = OrderServiceApi.class, group = "order2019", timeout = 9999999)
 public class DefaultOrder2019ServiceImpl implements OrderServiceApi {
 
     @Reference(interfaceClass = CinemaServiceApi.class, check = false)
