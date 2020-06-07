@@ -3,11 +3,13 @@ package com.stylefeng.guns.rest.common.util;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPReply;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 
 /**
@@ -32,8 +34,14 @@ public class FTPUtil {
             ftpClient.setControlEncoding("utf-8");
             ftpClient.connect(hostName, port);
             ftpClient.login(userName, password);
+            int reply = ftpClient.getReplyCode();
+            if (!FTPReply.isPositiveCompletion(reply)) {
+                log.error("FTP连接失败！");
+            } else {
+                log.info("FTP连接成功！");
+            }
         } catch (Exception e) {
-            log.error("初始化FTP失败", e);
+            e.printStackTrace();
         }
     }
 
@@ -46,9 +54,17 @@ public class FTPUtil {
         BufferedReader bufferedReader = null;
         try {
             initFTPClient();
+            if (ftpClient == null) {
+                return null;
+            }
+            ftpClient.enterLocalPassiveMode();
+            InputStream inputStream = ftpClient.retrieveFileStream(fileAddress);
+            if (inputStream == null) {
+                throw new IOException(ftpClient.getReplyString());
+            }
             bufferedReader = new BufferedReader(
                     new InputStreamReader(
-                            ftpClient.retrieveFileStream(fileAddress)
+                            inputStream
                     )
             );
             StringBuilder stringBuilder = new StringBuilder();
@@ -62,6 +78,7 @@ public class FTPUtil {
             ftpClient.logout();
             return stringBuilder.toString();
         } catch (Exception e) {
+            e.printStackTrace();
             log.error("获取文件信息失败", e);
         } finally {
             try {
