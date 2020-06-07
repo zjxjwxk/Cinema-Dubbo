@@ -4,29 +4,30 @@ services:
   user:
     image: cinema-user:latest
     command:
-      - "--zk.address=10.137.253.39"
-      - "--mysql.address=10.137.253.39"
+      - "--zk.address=${ZK_ADDRESS}"
+      - "--mysql.address=${MYSQL_ADDRESS}"
     tty: true
 
   film:
     image: cinema-film:latest
     command:
-      - "--mysql.address=10.137.253.39"
-      - "--zk.address=10.137.253.39"
+      - "--mysql.address=${ZK_ADDRESS}"
+      - "--zk.address=${MYSQL_ADDRESS}"
     tty: true
 
   cinema:
     image: cinema-cinema:latest
     command:
-      - "--mysql.address=10.137.253.39"
-      - "--zk.address=10.137.253.39"
+      - "--mysql.address=${ZK_ADDRESS}"
+      - "--zk.address=${MYSQL_ADDRESS}"
     tty: true
 
   order:
     image: cinema-order:latest
     command:
-      - "--mysql.address=10.137.253.39"
-      - "--zk.address=10.137.253.39"
+      - "--mysql.address=${ZK_ADDRESS}"
+      - "--zk.address=${MYSQL_ADDRESS}"
+      - "--ftp.address=${FTP_ADDRESS}"
     links:
       - cinema
     tty: true
@@ -34,8 +35,9 @@ services:
   alipay:
     image: cinema-alipay:latest
     command:
-      - "--mysql.address=10.137.253.39"
-      - "--zk.address=10.137.253.39"
+      - "--mysql.address=${ZK_ADDRESS}"
+      - "--zk.address=${MYSQL_ADDRESS}"
+      - "--ftp.address=${FTP_ADDRESS}"
     links:
       - order
     tty: true
@@ -43,8 +45,8 @@ services:
   gateway:
     image: cinema-gateway:latest
     command:
-      - "--mysql.address=10.137.253.39"
-      - "--zk.address=10.137.253.39"
+      - "--mysql.address=${ZK_ADDRESS}"
+      - "--zk.address=${MYSQL_ADDRESS}"
     links:
       - user
       - film
