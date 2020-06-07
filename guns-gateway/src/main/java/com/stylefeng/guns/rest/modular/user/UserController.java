@@ -31,7 +31,7 @@ public class UserController {
         if (userModel.getPassword() == null || userModel.getPassword().trim().length() == 0) {
             return ResponseVO.serviceFail("用户名不能为空");
         }
-        if (userAPI.checkUserName(userModel.getUsername())) {
+        if (!userAPI.checkUserName(userModel.getUsername())) {
             return ResponseVO.serviceFail("用户名已存在");
         }
         boolean isSuccess = userAPI.register(userModel);
@@ -45,9 +45,8 @@ public class UserController {
     @RequestMapping(value = "check", method = RequestMethod.POST)
     public ResponseVO check(String username) {
         if (username != null && username.trim().length() > 0) {
-            // 当返回 true 的时候，表示用户名可用
-            boolean notExists = userAPI.checkUserName(username);
-            if (notExists) {
+            // 当 checkUserName() 返回 true 的时候，表示用户名可用，即不存在
+            if (userAPI.checkUserName(username)) {
                 return ResponseVO.success("用户名不存在");
             } else {
                 return ResponseVO.serviceFail("用户名已存在");

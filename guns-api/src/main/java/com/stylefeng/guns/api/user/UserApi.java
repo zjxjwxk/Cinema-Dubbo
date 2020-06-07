@@ -24,9 +24,9 @@ public interface UserApi {
     boolean register(UserModel userModel);
 
     /**
-     * 检查用户名是否已存在
+     * 检查用户名是否可用
      * @param username 用户名
-     * @return 是否已存在
+     * @return 是否可用
      */
     boolean checkUserName(String username);
 
