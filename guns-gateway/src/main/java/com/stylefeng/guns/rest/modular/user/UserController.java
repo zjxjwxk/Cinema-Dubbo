@@ -31,6 +31,9 @@ public class UserController {
         if (userModel.getPassword() == null || userModel.getPassword().trim().length() == 0) {
             return ResponseVO.serviceFail("用户名不能为空");
         }
+        if (userAPI.checkUserName(userModel.getUsername())) {
+            return ResponseVO.serviceFail("用户名已存在");
+        }
         boolean isSuccess = userAPI.register(userModel);
         if (isSuccess) {
             return ResponseVO.success("注册成功");
