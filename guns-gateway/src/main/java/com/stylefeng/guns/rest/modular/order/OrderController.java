@@ -42,7 +42,7 @@ public class OrderController {
      * 令牌桶（限流算法）
      */
     private static TokenBucket tokenBucket = new TokenBucket();
-    private static final String IMG_PRE = "img.zjxjwxk.com/";
+    private static final String IMG_PRE = "http://img-cinema.zjxjwxk.com/";
 
     /**
      * 服务降级
@@ -58,21 +58,21 @@ public class OrderController {
      * 线程池隔离
      * 线程切换
      */
-    @HystrixCommand(fallbackMethod = "error",
-            commandProperties = {
-                @HystrixProperty(name = "execution.isolation.strategy", value = "THREAD"),
-                @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "4000"),
-                @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "10"),
-                @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "50")
-            },
-            threadPoolProperties = {
-                    @HystrixProperty(name = "coreSize", value = "1"),
-                    @HystrixProperty(name = "maxQueueSize", value = "10"),
-                    @HystrixProperty(name = "keepAliveTimeMinutes", value = "1000"),
-                    @HystrixProperty(name = "queueSizeRejectionThreshold", value = "8"),
-                    @HystrixProperty(name = "metrics.rollingStats.numBuckets", value = "12"),
-                    @HystrixProperty(name = "metrics.rollingStats.timeInMilliseconds", value = "1500")
-            })
+//    @HystrixCommand(fallbackMethod = "error",
+//            commandProperties = {
+//                @HystrixProperty(name = "execution.isolation.strategy", value = "THREAD"),
+//                @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "4000"),
+//                @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "10"),
+//                @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "50")
+//            },
+//            threadPoolProperties = {
+//                    @HystrixProperty(name = "coreSize", value = "1"),
+//                    @HystrixProperty(name = "maxQueueSize", value = "10"),
+//                    @HystrixProperty(name = "keepAliveTimeMinutes", value = "1000"),
+//                    @HystrixProperty(name = "queueSizeRejectionThreshold", value = "8"),
+//                    @HystrixProperty(name = "metrics.rollingStats.numBuckets", value = "12"),
+//                    @HystrixProperty(name = "metrics.rollingStats.timeInMilliseconds", value = "1500")
+//            })
     @RequestMapping(value = "buyTickets", method = RequestMethod.POST)
     public ResponseVO buyTickets(Integer fieldId, String soldSeats, String seatsName) {
         try {
