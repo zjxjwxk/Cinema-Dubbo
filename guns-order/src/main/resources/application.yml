@@ -10,7 +10,7 @@ jwt:
   md5-key: randomKey      #md5加密混淆key
 
 ftp:
-  host-name: 127.0.0.1
+  host-name: ${ftp.address}
   port: 21
   user-name: ftpuser
   password: 19981018
