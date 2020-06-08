@@ -47,6 +47,7 @@
             cinema_t.cinema_name AS cinemaName,
             order_2020_t.seats_name AS seatsName,
             order_2020_t.order_price AS orderPrice,
+            order_2020_t.order_status AS orderStatus,
             UNIX_TIMESTAMP(order_2020_t.order_time) AS orderTimestamp
         FROM order_2020_t, field_t, hall_film_info_t, cinema_t
         WHERE order_2020_t.cinema_id = cinema_t.UUID
