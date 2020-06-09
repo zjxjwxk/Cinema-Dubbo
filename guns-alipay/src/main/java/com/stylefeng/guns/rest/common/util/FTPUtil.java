@@ -56,6 +56,8 @@ public class FTPUtil {
             if (ftpClient == null) {
                 return false;
             }
+            ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);
+            ftpClient.setFileTransferMode(FTPClient.STREAM_TRANSFER_MODE);
             fileInputStream = new FileInputStream(file);
 
             // FTP相关
