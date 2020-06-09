@@ -43,6 +43,7 @@
         SELECT
             order_2020_t.UUID AS orderId,
             hall_film_info_t.film_name AS filmName,
+            hall_film_info_t.img_address AS imgAddress,
             CONCAT(DATE_FORMAT(order_2020_t.order_time,'%y年%m月%d日'), ' ', field_t.begin_time) AS fieldTime,
             cinema_t.cinema_name AS cinemaName,
             order_2020_t.seats_name AS seatsName,
