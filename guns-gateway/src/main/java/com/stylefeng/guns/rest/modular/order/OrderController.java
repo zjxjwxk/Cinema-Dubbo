@@ -128,7 +128,7 @@ public class OrderController {
         orderVOList.addAll(order2020VOPage.getRecords());
         orderVOList.addAll(order2019VOPage.getRecords());
 
-        return ResponseVO.success(nowPage, totalPages, "", orderVOList);
+        return ResponseVO.success(nowPage, totalPages, IMG_PRE, orderVOList);
     }
 
     @RequestMapping(value = "getPayInfo", method = RequestMethod.POST)
