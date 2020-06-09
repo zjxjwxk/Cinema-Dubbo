@@ -36,7 +36,7 @@ import java.util.List;
  */
 @Slf4j
 @Component
-@Service(interfaceClass = AlipayServiceApi.class, mock = "com.stylefeng.guns.api.alipay.AlipayServiceMock")
+@Service(interfaceClass = AlipayServiceApi.class, mock = "com.stylefeng.guns.api.alipay.AlipayServiceMock", timeout = 9999999)
 public class DefaultAlipayServiceImpl implements AlipayServiceApi {
 
     @Reference(interfaceClass = OrderServiceApi.class, check = false, group = "order2020")
@@ -185,7 +185,7 @@ public class DefaultAlipayServiceImpl implements AlipayServiceApi {
                 AlipayTradePrecreateResponse response = result.getResponse();
 
                 // 需要修改为运行机器上的路径
-                filePath = String.format("/ftpfile/qrcode/qr-%s.png",
+                filePath = String.format("qrcode/qr-%s.png",
                         response.getOutTradeNo());
                 String fileName = String.format("qr-%s.png", response.getOutTradeNo());
                 log.info("filePath:" + filePath);
