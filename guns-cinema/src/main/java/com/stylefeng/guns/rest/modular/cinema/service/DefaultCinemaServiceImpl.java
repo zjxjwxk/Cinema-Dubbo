@@ -158,8 +158,8 @@ public class DefaultCinemaServiceImpl implements CinemaServiceApi {
         List<HallDictT> hallDictTList = hallDictTMapper.selectList(null);
         for (HallDictT hall : hallDictTList) {
             HallTypeVO hallTypeVO = new HallTypeVO();
-            hallTypeVO.setHallTypeId(hall.getUuid() + "");
-            hallTypeVO.setHallTypeName(hall.getShowName());
+            hallTypeVO.setHalltypeId(hall.getUuid() + "");
+            hallTypeVO.setHalltypeName(hall.getShowName());
             // 如果flag == true，则所有的isActive都置为true；否则，仅将编号为hallTypeId的isActive置为true
             if (flag) {
                 if (hall.getUuid() == 99) {
