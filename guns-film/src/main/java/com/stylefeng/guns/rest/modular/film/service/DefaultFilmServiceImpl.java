@@ -95,6 +95,7 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
                     page = new Page<>(nowPage, pageSize, "film_box_office");
                     break;
             }
+            page.setAsc(false);
 
             // 如果catId，sourceId，yearId不为99，则表示要按照对应的编号进行查询
             if (catId != 99) {

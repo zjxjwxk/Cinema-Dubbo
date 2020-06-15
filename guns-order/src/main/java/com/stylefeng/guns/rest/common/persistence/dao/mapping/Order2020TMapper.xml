@@ -55,6 +55,7 @@
           AND order_2020_t.field_id = field_t.UUID
           AND order_2020_t.film_id = hall_film_info_t.film_id
           AND order_2020_t.order_user = #{userId}
+        ORDER BY order_2020_t.order_time DESC
     </select>
 
     <select id="getSoldSeatsByFieldId" parameterType="java.lang.Integer" resultType="java.lang.String">
