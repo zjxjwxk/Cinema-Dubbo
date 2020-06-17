@@ -9,6 +9,9 @@ jwt:
   auth-path: auth         #认证请求的路径
   md5-key: randomKey      #md5加密混淆key
 
+zipkin:
+  address: ${zipkin.address}
+
 server:
   port: 8085 #项目端口
 
@@ -41,7 +44,7 @@ spring:
     consumer:
       filter: tracing
   datasource:
-      url: jdbc:mysql://${mysql.address}:3306/cinema?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
+      url: jdbc:mysql://${mysql.address}:3306/cinema?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&useSSL=false
       username: root
       password: Zjxjwxk19981018_
       filters: log4j,wall,mergeStat

@@ -16,6 +16,9 @@ ftp:
   password: 19981018
   upload-path: qrcode
 
+zipkin:
+  address: ${zipkin.address}
+
 server:
   port: 8087 #项目端口
 
@@ -47,7 +50,7 @@ spring:
     consumer:
       filter: tracing
   datasource:
-      url: jdbc:mysql://${mysql.address}:3306/cinema?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
+      url: jdbc:mysql://${mysql.address}:3306/cinema?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&useSSL=false
       username: root
       password: Zjxjwxk19981018_
       filters: log4j,wall,mergeStat

@@ -10,6 +10,9 @@ jwt:
   md5-key: randomKey      #md5加密混淆key
   ignore-url: /user/register,/user/check,/film/,/cinema/ #忽略列表
 
+zipkin:
+  address: ${zipkin.address}
+
 server:
   port: 8081 #项目端口
 
@@ -40,7 +43,7 @@ spring:
       check: false
 
   datasource:
-      url: jdbc:mysql://${mysql.address}:3306/cinema?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
+      url: jdbc:mysql://${mysql.address}:3306/cinema?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&useSSL=false
       username: root
       password: Zjxjwxk19981018_
       filters: log4j,wall,mergeStat

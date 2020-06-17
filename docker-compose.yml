@@ -6,6 +6,7 @@ services:
     command:
       - "--zk.address=${ZK_ADDRESS}"
       - "--mysql.address=${MYSQL_ADDRESS}"
+      - "--zipkin.address=${ZIPKIN_ADDRESS}"
     tty: true
 
   film:
@@ -13,6 +14,7 @@ services:
     command:
       - "--mysql.address=${MYSQL_ADDRESS}"
       - "--zk.address=${ZK_ADDRESS}"
+      - "--zipkin.address=${ZIPKIN_ADDRESS}"
     tty: true
 
   cinema:
@@ -20,6 +22,7 @@ services:
     command:
       - "--mysql.address=${MYSQL_ADDRESS}"
       - "--zk.address=${ZK_ADDRESS}"
+      - "--zipkin.address=${ZIPKIN_ADDRESS}"
     tty: true
 
   order:
@@ -28,6 +31,7 @@ services:
       - "--mysql.address=${MYSQL_ADDRESS}"
       - "--zk.address=${ZK_ADDRESS}"
       - "--ftp.address=${FTP_ADDRESS}"
+      - "--zipkin.address=${ZIPKIN_ADDRESS}"
     links:
       - cinema
     tty: true
@@ -38,6 +42,7 @@ services:
       - "--mysql.address=${MYSQL_ADDRESS}"
       - "--zk.address=${ZK_ADDRESS}"
       - "--ftp.address=${FTP_ADDRESS}"
+      - "--zipkin.address=${ZIPKIN_ADDRESS}"
     links:
       - order
     tty: true
@@ -47,6 +52,7 @@ services:
     command:
       - "--mysql.address=${MYSQL_ADDRESS}"
       - "--zk.address=${ZK_ADDRESS}"
+      - "--zipkin.address=${ZIPKIN_ADDRESS}"
     links:
       - user
       - film

@@ -15,6 +15,9 @@ ftp:
   user-name: ftpuser
   password: 19981018
 
+zipkin:
+  address: ${zipkin.address}
+
 server:
   port: 8086 #项目端口
 
@@ -46,7 +49,7 @@ spring:
       name: dubbo
       port: 20884
   datasource:
-      url: jdbc:mysql://${mysql.address}:3306/cinema?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
+      url: jdbc:mysql://${mysql.address}:3306/cinema?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&useSSL=false
       username: root
       password: Zjxjwxk19981018_
       filters: log4j,wall,mergeStat

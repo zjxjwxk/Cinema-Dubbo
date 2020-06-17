@@ -21,7 +21,7 @@ public class TraceConfig {
     @Bean("tracing")
     public TracingFactoryBean getTracingBean() {
         TracingFactoryBean tracingFactoryBean = new TracingFactoryBean();
-        tracingFactoryBean.setLocalServiceName("gateway");
+        tracingFactoryBean.setLocalServiceName("film");
         tracingFactoryBean.setSpanReporter(AsyncReporter.create(OkHttpSender.create("http://" + address + ":9411/api/v2/spans")));
         return tracingFactoryBean;
     }
